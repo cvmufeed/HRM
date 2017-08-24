@@ -1,0 +1,8 @@
+{* notag *}
+{if $sm.dept}
+<option value="">{if $sm.flag eq 1}All{else}Select{/if}</option>
+{html_options options=$sm.dept selected=$sm.res.id_department}
+{else}
+<option value="">{if $sm.flag eq 1}All{else}Select{/if}</option>
+{html_options options=$sm.dept1} 
+{/if}

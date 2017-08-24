@@ -1,0 +1,74 @@
+{if $sm.flag == 'view'}
+<div class="smlest_box">
+	<div class="top"></div>
+	<div class="mdl">
+    	{if $sm.flag == 'view'}
+        	<div class="cont_hdr1 fltlft">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" align="left">Recently viewed</div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+            <div class="wid84smlst">
+                {foreach from=$sm.lviewedemp item=item key=key}
+                    <p><a onclick="empDetail('{$key}');" style="cursor:pointer;" title="See details of {$item}">{$item}</a></p>
+                {foreachelse}
+                    <p>No employees found.</p>
+                {/foreach}
+            </div>
+        {else}
+            <div class="cont_hdr1 fltlft">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" align="left">Recently added</div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>	
+            <div class="mrgn_lft">
+            {foreach from=$sm.laddedemp item=item key=key}
+                <p><a onclick="empDetail('{$key}');" style="cursor:pointer;" title="See details of {$item}">{$item}</a></p>
+            {foreachelse}
+                <p>No employees found.</p>
+            {/foreach}
+            </div>
+            <div class="cont_hdr1 fltlft">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" align="left">Recently modified</div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>	
+            <div class="mrgn_lft">
+            {foreach from=$sm.lmodifiedemp item=item key=key}
+                <p><a onclick="empDetail('{$key}');" style="cursor:pointer;" title="See details of {$item}">{$item}</a></p>
+            {foreachelse}
+                <p>No employees found.</p>
+            {/foreach}
+        </div>
+        {/if}
+        <div class="clear"></div>	
+    </div>
+	<div class="btm"></div>
+</div>
+{else}
+<div class="latest">
+    <div><b>Recently added employees</b></div>
+    <div class="mrgn_lft">
+    {foreach from=$sm.laddedemp item=item key=key}
+    	<p><a onclick="empDetail('{$key}');" style="cursor:pointer;" title="See details of {$item}">{$item}</a></p>
+	{foreachelse}
+		<p>No employees found.</p>
+	{/foreach}
+    </div>
+</div>
+<div class="latest">
+    <div><b>Recently modified employees</b></div>
+    <div class="mrgn_lft">
+    	{foreach from=$sm.lmodifiedemp item=item key=key}
+        	<p><a onclick="empDetail('{$key}');" style="cursor:pointer;" title="See details of {$item}">{$item}</a></p>
+        {foreachelse}
+            <p>No employees found.</p>
+        {/foreach}
+    </div>
+</div>
+{/if}
+
+

@@ -1,0 +1,51 @@
+<table align="center">
+	<tr>
+    	<td valign="top"><div class="smler_box">
+	<div class="top"></div>
+	<div class="mdl">
+    	<div class="cont_hdr1 fltlft">
+                    <div class="cont_hdr_lft fltlft"></div>
+                    <div class="cont_hdr_mdl1 fltlft" align="left">Search</div>
+                    <div class="cont_hdr_rht fltlft"></div>
+                </div>
+        <div class="clear"></div>	
+            <table class="listing_tbl" border="0">
+                <tr>
+                    <td width="30%" valign="middle">
+                        <b>Search on month : </b>
+                    </td>
+                    <td width="70%">
+                        {html_select_date start_year=1900 display_days=false display_years=false  month_extra="onChange=searchUpcomingBirthdays('','','','0');" month_empty="All"}
+                    </td>
+                </tr>
+            </table>
+    </div>
+	<div class="btm"></div>
+</div></td>
+    	<td><div id="report_upcomingBirthdays">{include file=report/upcomingBirthdays}</div></td>
+    </tr>
+</table>
+{literal}
+<script type="text/javascript">
+	$("body #container").ready(
+		function(){
+			$(this).find('select:first').attr("id","search_month");
+		}
+	);
+	function searchUpcomingBirthdays(f,msg,k,qs){
+		cShowActivity('1');
+		var url="##LBL_SITE_URL##index.php/page-report-choice-upcomingBirthdays";
+		var m=$.trim($("#search_month").val());
+		if(m==''){
+			m='0';
+		}
+		if(qs===''){
+			qs=$("#qstart").val();
+		}
+		$.post(url,{ce:0,chk:1,qs:qs,m:m},function(res){
+			$("#report_upcomingBirthdays").html(res);
+			cHideActivity();
+		});
+	}
+</script>
+{/literal}

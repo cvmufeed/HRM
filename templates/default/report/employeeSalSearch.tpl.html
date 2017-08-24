@@ -1,0 +1,33 @@
+<table border="0">
+	<tr>
+		<td align="center" height="50">
+			<b>Search on salary :</b>
+			<select id="sal_range" name="sal_range" onchange="searchEmployeeSalList('','','','0');" style="width:20%">
+			<option value="">-- All --</option>
+			{html_options options=$sm.sal_ranges}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td width="100%">
+			<div id="report_employeeSalary">{include file=report/employeeSalList}</div>
+		</td>
+	</tr>
+</table>
+{literal}
+<script type="text/javascript">
+	function searchEmployeeSalList(f,msg,k,qs){
+		cShowActivity('1');
+		var url="##LBL_SITE_URL##index.php/page-report-choice-employeeSalary";
+		if(qs===''){
+			qs=$("#qstart").val();
+		}
+		
+		var sal_range = $("#sal_range").val();
+		$.post(url,{ce:0,chk:1,qs:qs,sal_range:sal_range},function(res){
+			$("#report_employeeSalary").html(res);
+			cHideActivity('');
+		});
+	}
+</script>
+{/literal}

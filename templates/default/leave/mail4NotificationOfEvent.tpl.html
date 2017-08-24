@@ -1,0 +1,41 @@
+Dear admin,<br><br>
+	{if $sm.flag eq 2}
+		An employee detail is modified. Details are given below: <br><br>
+		Employee name: <b>{$sm.name}</b> <br>
+		Employee e-mail: <b>{$sm.email}</b> <br>
+		Type of modification: <b>{$sm.update_page}</b>  <br>
+		Time of update: <b>{$smarty.now|date_format:"%d-%m-%Y %H:%M:%S"}</b>
+	{/if}
+	{if $sm.flag eq 1}
+		Recently an employee is added. Details are given below: <br><br>
+		Employee e-mail: <b>{$sm.email}</b> <br>
+		Date: <b>{$smarty.now|date_format:"%d-%m-%Y"}</b>
+		Time: <b>{$smarty.now|date_format:"%H:%M"}</b>
+	{/if}
+	{if $sm.flag eq 3}
+		At <b>{$smarty.now|date_format:"%d-%m-%Y %H:%M:%S"}</b> some of employee(s) are deleted. Removal list is given below :<br><br>
+		<table border="0" align="center">
+		<tr>
+			<td><b>Profile pic</b></td>
+			<td><b>Work e-mail</b></td>
+		</tr>
+		{section name=cur loop=$emps}
+		{assign var=x value=$emps[cur]}
+		    <tr>
+			<td>
+	    			{if $x.avatar eq ''}
+	    				<img src="##LBL_SITE_URL##templates/css_theme/img/avatar/search/hrm_{if $x.gender eq M}male.jpg{else}female.jpg{/if}" title="Profile Pic" alt="Allow to show image.">&emsp;
+	    				
+	    			{else}
+	    				<img src="##LBL_SITE_URL##image/thumb4_search/avatar/{$x.id_employee}_{$x.avatar}" title="Profile Pic" style="height:50px;width:50px;">
+	    			{/if}
+			</td>
+			<td><b>{$x.work_email|default:"NA"}</b></td>
+		    </tr>
+	        {/section} 
+	        </table>
+		
+	{/if}
+	<br><br>
+Regards,<br>
+Admin

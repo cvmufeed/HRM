@@ -1,0 +1,27 @@
+<!-- messages set by all modules shown here -->
+<center>
+<div id="target" align="center" style="width:30%;">
+{*nofilter file="debug" *}
+{*$module*}
+{if $smarty.session.raise_message.$module}
+    <div class="alert" align="center">{$smarty.session.raise_message.$module}</div>
+{/if}
+{if $sm.message}
+{section name=cur_msg loop=$sm.message}
+     <div class="alert" align="center">{$sm.message[cur_msg]}</div>
+{sectionelse}
+     <div class="alert" align="center">{$sm.message}</div>
+{/section}
+{/if}
+{* $smarty.session.ip_count *}
+</div>
+</center>
+{literal}
+<script type="text/javascript">
+var mesg="{/literal}{$smarty.session.raise_message.$module}{literal}";
+if(mesg!=''){
+	$("#target").addClass("icon-msg");
+	showmsg("target",'');
+}
+</script>
+{/literal}

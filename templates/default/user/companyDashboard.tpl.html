@@ -1,0 +1,78 @@
+{literal}
+	<script type="text/javascript">
+		//fancyAlert("test");
+		$(document).ready(function(res){
+			var wel_flag = "{/literal}{$smarty.session.wel_flag}{literal}";
+			if(wel_flag){
+				cShowActivity('');
+				var url = "##LBL_SITE_URL##";
+				$.post(url,{page:'user',choice:'welcomeCompany',ce:0},function(res){
+					wel_flag = 0;
+					show_fancybox(res);
+				 });
+			}else{
+				return true;
+			}
+		});
+		function addEmployee(){
+			cShowActivity('');
+			var url = '##LBL_SITE_URL##index.php/';
+			$.post(url,{page:'employee',choice:'addEmployee','flg':'dash',ce:0},function(res){
+				show_fancybox(res);
+			});
+		}
+	</script>
+{/literal}
+
+<div class="cont">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+        <div align="center">
+            <div class="ds_hdr">
+            	Welcome back, {$smarty.session.company_name} (Administrator)<br/>
+        	</div>
+        </div>
+        <div class="fltlft">
+             <div class="cont_hdr fltlft">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl fltlft">Recently added or modified employees</div>
+                <div class="cont_hdr_rht fltlft"></div>
+                <div class="clear"></div>
+                {get_mod mod=employee mgr=employee choice=latestAddModifyViewEmp}
+                <br />
+
+
+            </div>
+
+            <div class="cont_hdr fltlft">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl fltlft">Reminders</div>
+                <div class="cont_hdr_rht fltlft"></div>
+                <div class="clear"></div>
+                {get_mod mod=adminstration mgr=adminstration choice=reminderShow}
+            </div>
+             <div class="cont_hdr fltlft">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl fltlft">Quick actions</div>
+                <div class="cont_hdr_rht fltlft"></div>
+                <div class="clear"></div>
+
+                <div class="latest">
+                    <div class="mrgn_lft">
+                        <p class="lnk"><a style="cursor:pointer;" title="Add Employee" onclick="addEmployee();";>Add a New Employee</a></p>
+                        <p class="lnk"><a href="##LBL_SITE_URL##index.php/adminstration/benefitManagement/" title="Manage Benifits">Manage Benefits</a></p>
+                        <p class="lnk"><a href="##LBL_SITE_URL##index.php/leave/leaveRequest/" title="Manage Leaves">Manage Leaves</a></p>
+                    </div>
+                </div>
+
+
+            </div>
+
+           </div>
+
+         <div class="clrbth"></div>
+
+    </div>
+    <div class="cont_bg_btm"></div>
+    <center><div><font color=#707070 size=-2>Last Login: On {$smarty.session.last_login|date_format:"%d-%m-%Y %H:%M:%S"} from {$smarty.session.ip}</font></div></center>
+</div>

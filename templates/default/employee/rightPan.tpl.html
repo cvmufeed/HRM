@@ -1,0 +1,30 @@
+<ul class="rht_pan_ul fltlft">
+	<li>
+		<a title="See Personal Details" href="##LBL_SITE_URL##index.php/employee/employeeDetail/{if $smarty.session.id_company}id-{$smarty.session.cur_emp_id}{/if}" class="{if $smarty.request.page eq 'employee' && $smarty.request.choice eq 'employeeDetail'}cur{else}notcur{/if}">Personal Information</a>
+	</li>
+	<li>
+		<a title="See Emergency Details" href="##LBL_SITE_URL##index.php/employee/emergencyDetail/{if $smarty.session.id_company}id-{$smarty.session.cur_emp_id}{/if}" class="{if $smarty.request.page eq 'employee' && $smarty.request.choice eq 'emergencyDetail'}cur{else}notcur{/if}">Emergency Contact</a>
+	</li>
+	<li>
+		<a title="See Salary Details" href="##LBL_SITE_URL##index.php/employee/salaryDetail/{if $smarty.session.id_company}id-{$smarty.session.cur_emp_id}{/if}" class="{if $smarty.request.page eq 'employee' && ($smarty.request.choice eq 'salaryDetail' || $smarty.request.choice eq 'insertSalary')}cur{else}notcur{/if}">Salary</a>
+	</li>
+	<li>
+		<a title="See Benefits Details" href="##LBL_SITE_URL##index.php/employee/benefits/{if $smarty.session.id_company}id-{$smarty.session.cur_emp_id}{/if}" class="{if $smarty.request.page eq 'employee' && ($smarty.request.choice eq 'benefits' || $smarty.request.choice eq 'updateBenefit' || $smarty.request.choice eq 'insertBenefit')}cur{else}notcur{/if}">Benefits</a>
+	</li>
+
+	<li>
+		<a title="See Assigned Company Properties" href="##LBL_SITE_URL##index.php/employee/assignedProperty/{if $smarty.session.id_company}id-{$smarty.session.cur_emp_id}{/if}" class="{if $smarty.request.page eq 'employee' && ($smarty.request.choice eq 'assignedProperty' || $smarty.request.choice eq 'insertProperty')}cur{else}notcur{/if}">Company Properties</a>
+	</li>
+</ul>
+<div class="clear"></div>
+{literal}
+<script type="text/javascript">
+$(document).ready(function(){
+		right_sel();
+});
+function right_sel(){
+	$('ul.rht_pan_ul li').removeClass('cur');
+	$('a.cur').parent('li').addClass('cur');
+}
+</script>
+{/literal}

@@ -1,0 +1,43 @@
+INSTALLATION 
+
+Compatible with WampServer Version 2.0 and xampp version 1.7.2
+
+1. Download and extract SimpleHRM package to the root directory of your Apache installation
+
+2. Enable the rewrite module in your server. Below details to enable the rewrite module in httpd.conf file.
+		- Load Module rewrite_module modules / mod_rewrite.so
+		- Restart the apache server after enable rewrite module.
+		- If already enabled rewrite module, Please ignore step 2
+
+3. Create MySQL Database and MySQL username & password through PHPMyAdmin
+
+4. Access the installation form by URL: http://localhost/APPLICATION_FOLDER_NAME
+		Provide the information required in the form
+		- Server Name [localhost / Your System IP Address]
+		- MySQL Database & User Authentication details
+		- Application Administrator Username and Password
+
+5. After installation has been done, rename or delete the “install” folder from the directory.
+   
+6. Add SMTP mail server details in php.ini configuration file and restart Apache server.
+		Note: SMTP configuration is used for mail workflow. If not configured properly, mail workflow will not work
+		- SMTP          = Your mail server host (e.g. mail.exampledomain.com)
+		- smtp_port     = 25
+		- sendmail_from = your company mail address ( e.g. email@exampledomain.com)
+
+		
+
+User Note : FAQ
+---------------
+
+1. User / Role feature is for Administrator only not for employee.
+2. For Employee Self Service ( i.e, To apply Leave, To report employee tasks), the employee login credentials are send to employee email address when an administrator add an employee.
+	
+
+
+-----------------------
+For Further queries, Please write to us @
+
+support@simplehrm.com
+
+

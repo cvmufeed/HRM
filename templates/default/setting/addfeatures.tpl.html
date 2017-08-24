@@ -1,0 +1,115 @@
+<div style="width:405px;" id="setting_modulefeaturelist">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:333px;">
+         {if $sm.feature_edit} Edit {else} Add {/if} Features  </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+    <span id="features_msg" class="error"></span><br>
+    <form id="add_features" name="add_features" method="post" action="javascript:void(0);">
+        <table class="listing_tbl">
+        {if $sm.feature_edit.id_modulefeatures}
+		    		<input type="hidden" id="fetaures[temp_id]" name="features[temp_id]" value="{$sm.feature_edit.id_modulefeatures}">
+		    	{/if}
+                <input type="hidden" id="modules[modules_id]" name="modules[modules_id]" value="{$sm.modules.id_modules}">
+
+            <tr>
+            <td align='right'><b>Feature Name: </b></td>
+            <td><input type="text" name="features[features_name]" value="{$sm.feature_edit.features_name}" class="text"></td>
+        </tr>
+             <tr>
+            <td align='right'><b>Feature Values: </b></td>
+            <td><input type="text" name="features[features_values]" value="{$sm.feature_edit.features_value}" class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Iswriteaccess : </b></td>
+            {if $sm.feature_edit.iswriteaccess}
+              <td><input type="checkbox"  name="features[iswriteaccess]" value="1" checked="checked"></td>
+              {else}
+             <td><input type="checkbox"  name="features[iswriteaccess]" {if checked} value="1" {else} value="0" {/if}></td>
+             {/if}
+         </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_property" value="Save" onclick="save('{$sm.feature_edit.id_modulefeatures}');" class="login_btn">
+            </td>
+        </tr>
+    </table>
+    </form>
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#add_features");
+function save(id_modulefeatures){
+	$("#modules_msg").html("");
+	var res = addFeatures();
+//	alert(id_modulefeatures);
+ if(res){
+		cShowActivity('2');
+		var data=$("#add_features").serialize();
+  		if(id_modulefeatures!='')
+		{
+		var url="##LBL_SITE_URL##index.php/setting/updatefeatures?"+data;
+		}
+		else
+		{
+			var url="##LBL_SITE_URL##index.php/setting/insertfeatures?"+data;
+		}
+	//	alert(url);
+  $.post(url,{ce:0},function (res){
+  			$("#setting_modulefeaturelist").html(res);
+				$.fancybox.close();
+                cHideActivity();
+		});
+	}else
+		return false;
+}
+function addFeatures(){
+	var validator_Features=$("#add_features").validate({
+		rules: {
+			"features[features_name]": {
+				required:true
+			},
+   		},
+		messages: {
+			"features[features_name]":{
+				required:flexymsg.required
+			},
+
+		}
+	});
+	return validator_Features.form();
+}
+</script>
+<style type="text/css">
+#add_modules .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#add_modules select {
+	border:1px solid #ccc;
+	width:209px;
+	padding:4px;
+}
+</style>
+{/literal}
+
+
+
+
+
+
+
+
+
+
+

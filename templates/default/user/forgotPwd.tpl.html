@@ -1,0 +1,72 @@
+	<div class="form">
+    	<div class="fltlft">
+        	<div class="form_hdrbg_lft fltlft"></div>
+            <div class="form_hdrbg_mdl fltlft">
+                
+                <div class="fltrht" style="margin-top:5px;">
+                	<ul class="menu menu1">
+                    	<li class="openul">
+                            <div class="fltlft lft_prt"></div>
+                            <div class="fltlft mdl_prt"><a href="##APP_ROOT_URL##">Login</a></div>
+                            <div class="fltlft rht_prt"></div>
+                        </li>
+                    	<li class="openul sel">
+                            <div class="fltlft lft_prt"></div>
+                            <div class="fltlft mdl_prt"><a href="javascript:void(0);">Forgot Password</a></div>
+                            <div class="fltlft rht_prt"></div>
+                        </li>
+		                <div class="clear"></div>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+			</div>
+            <div class="form_hdrbg_rht fltlft"></div>
+        </div>
+        <div class="clrbth"></div>
+        <div class="form_bg_mdl">
+        	<div  class="login_blue_hdr">
+                <div class="login_hdrlft fltlft"></div>
+                <div class="login_hdrmdl fltlft">Enter your username to get your password</div>
+                <div class="login_hdrrht fltlft"></div>
+            </div>
+            <div class="clrbth"></div>
+            <div>
+				<form action="##APP_ROOT_URL##index.php/user/getForgotPwd" method="post" name="forgotform" id="forgotform" onsubmit="return validate();">
+                    <table width="434px" align="center">
+                        <tr>
+                            <td style="text-align: center; vertical-align:middle"; width="110px">Username :</td>
+                            <td><input type="text" name="username" id="username" class="txt_bg" style="border:none;"/></td>
+                        </tr>
+                        <tr>
+                        	<td></td>
+                            <td align="right"><input type="submit" value="Submit" style="margin-top:25px;" class="login_btn"/></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="form_bg_btm"></div>
+    </div>
+
+{literal}
+<script type="text/javascript">
+function validate(){
+	var validator=$("#forgotform").validate({
+	   rules: {
+	   		"username":{
+				required:true,
+				email:true
+			}
+		},
+		messages: {
+			"username":{
+				required:flexymsg.required,
+				email:flexymsg.email
+			}
+		}
+	});
+	var x=validator.form();
+	return x;
+}
+</script>
+{/literal}

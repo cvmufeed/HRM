@@ -1,0 +1,113 @@
+<div style="width:405px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:333px;">
+         {if $sm.leave_scheme} Edit {else} Add {/if} Leave Scheme  </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+    <span id="leavescheme_msg" class="error"></span><br>
+    <form id="add_leavescheme" name="add_leavescheme" method="post" action="javascript:void(0);">
+        <table class="listing_tbl">
+        {if $sm.leave_scheme.id_leave_scheme}
+		    		<input type="hidden" id="leavescheme[temp_id]" name="leavescheme[temp_id]" value="{$sm.leave_scheme.id_leave_scheme}">
+		    	{/if}
+
+            <td align='right'><b>Leave Scheme Name: </b></td>
+            <td><input type="text" name="leavescheme[name]" value="{$sm.leave_scheme.Leave_schemename}"class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Serial No. : </b></td>
+            <td><input type="text" name="leavescheme[id]" value="{$sm.leave_scheme.id_leave_type}" class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Leave Elgi days : </b></td>
+            <td><input type="text"  name="leavescheme[leaveelgi]" value="{$sm.leave_scheme.leave_elgidays}" class="text"></textarea></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_property" value="Save" onclick="save('{$sm.leave_scheme.id_leave_scheme}');" class="login_btn">
+            </td>
+        </tr>
+    </table>
+    </form>
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#add_leavescheme");
+function save(id_leavescheme){
+	$("#leavescheme_msg").html("");
+	var res = assignProperty();
+ if(res){
+		cShowActivity('2');
+		var data=$("#add_leavescheme").serialize();
+  		if(id_leavescheme!='')
+		{
+		var url="##LBL_SITE_URL##index.php/adminstration/updateleavescheme?"+data;
+		}
+		else
+		{
+			var url="##LBL_SITE_URL##index.php/adminstration/insertleavescheme?"+data;
+		}
+	//	alert(url);
+  $.post(url,{ce:0},function (res){
+  			$("#adminstration_Leavescheme").html(res);
+				$.fancybox.close();
+                cHideActivity();
+		});
+	}else
+		return false;
+}
+function assignProperty(){
+	var validator_assign_property=$("#add_leavescheme").validate({
+		rules: {
+			"leavescheme[name]": {
+				required:true
+			},
+			"leavescheme[id]": {
+				required:true
+			}
+		},
+		messages: {
+			"leaveschme[name]":{
+				required:flexymsg.required
+			},
+			"leavescheme[id]":{
+				required:flexymsg.required
+			}
+		}
+	});
+	return validator_assign_property.form();
+}
+</script>
+<style type="text/css">
+#add_leavescheme .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#add_leavescheme select {
+	border:1px solid #ccc;
+	width:209px;
+	padding:4px;
+}
+</style>
+{/literal}
+
+
+
+
+
+
+
+
+
+
+

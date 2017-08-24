@@ -1,0 +1,99 @@
+<?php /* Smarty version 2.6.7, created on 2017-08-24 10:37:22
+         compiled from user/loginForm.tpl.html */ ?>
+
+<!-- Template: user/loginForm.tpl.html Start 24/08/2017 10:37:22 --> 
+ <?php echo '
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#uname").focus();
+	 });
+	function validate_login(){
+		validator=$("#loginform").validate({
+		   	rules: {
+			   username: {
+					required:true
+				 },
+				password:{
+					required: true,
+					minlength: 6
+				 }
+			 },
+			messages: {
+				username:{
+					required:flexymsg.required
+				
+				 },
+				password:{
+					required:flexymsg.required,
+					minlength:flexymsg.minlength
+				 }
+			 }
+		 });
+		x=validator.form();
+		return x;
+	 }
+	
+</script>
+
+'; ?>
+
+
+	<div class="form">
+    	<div class="fltlft">
+        	<div class="form_hdrbg_lft fltlft"></div>
+            <div class="form_hdrbg_mdl fltlft">
+                <div class="fltrht" style="margin-top:5px;">
+                	<ul class="menu menu1">
+                    	<li class="openul sel">
+                            <div class="fltlft lft_prt"></div>
+                            <div class="fltlft mdl_prt"><a href="javascript:void(0);">Login</a></div>
+                            <div class="fltlft rht_prt"></div>
+                        </li>
+                    	<li class="openul">
+                            <div class="fltlft lft_prt"></div>
+                            <div class="fltlft mdl_prt"><a href="http://localhost/simplehrm/index.php/forgotPwd">Forgot Password</a></div>
+                            <div class="fltlft rht_prt"></div>
+                        </li>
+		                <div class="clear"></div>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+			</div>
+            <div class="form_hdrbg_rht fltlft"></div>
+        </div>
+        <div class="clrbth"></div>
+        <div class="form_bg_mdl">
+        	<div  class="login_blue_hdr">
+                <div class="login_hdrlft fltlft"></div>
+                <div class="login_hdrmdl fltlft">Please enter your login information</div>
+                <div class="login_hdrrht fltlft"></div>
+                <div class="clear"></div>
+            </div>
+            <div class="clrbth"></div>
+				<form id="loginform" name="loginform" action="http://localhost/simplehrm/index.php/user/setLogin" method="post" onsubmit="return validate_login();">
+                <table border="0" width="434px" align="center">
+                    <tr>
+                        <td style="text-align:center; vertical-align:middle" width="110px" align="right" valign="top">Username: </td>
+                        <td width="324px"><input type="text" name="username" value="" id="uname" class="txt_bg" style="border:none" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; vertical-align:middle" align="right">Password: </td>
+                        <td><input type="password" name="password" id="pass" value="" class="txt_bg" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><input type="checkbox" name="rem" id="rem" value="1"/></td>
+                        <td>Remember me</td>
+                    </tr>
+                    <tr>
+                    	<td></td>
+                    <td>
+                    	<div align="right"><input type="submit" value="Login" class="login_btn"/></div>
+                    </td>
+                    </tr>
+                </table>
+                </form>
+        </div>
+        <div class="form_bg_btm"></div>
+    </div>
+
+<!-- Template: user/loginForm.tpl.html End --> 

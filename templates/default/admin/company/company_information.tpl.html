@@ -1,0 +1,154 @@
+{literal}
+<script type="text/javascript">
+function show_image(){
+	var im=$('#image').val();
+	if(im){
+			ch='preview_image';
+			var url="##LBL_ADMIN_SITE_URL##index.php/page-company-choice-"+ch+"-ce-0";
+				$.ajaxFileUpload({
+					url : url,
+					secureuri:false,
+					fileElementId:'image',
+					dataType: 'json',
+					complete: function (data, status){
+						z = data.responseText;
+						var img="<dt class='tl'><label>Selected Image</label></dt><dd class='tl'><img src='##LBL_SITE_URL##preview/thumb/companylogo/"+z+"'></dd>";
+						$('#prev_image').html(img);
+					}
+				});
+		
+	}
+}
+
+function  validate_company_information() {
+	var validator=$("#comp_info").validate({
+			rules: {
+				"company[company_name]": {
+					required:true
+				},
+				"company[company_info]":{
+					required: true
+				},
+				"company[address]": {
+					required:true
+				},
+				"company[tax_id]": {
+					required:true,
+					number:true
+				},
+				"company[twitter_id]": {
+					required:true
+				},
+				"company[facebook_id]": {
+					required:true
+				},
+				"company[linkedin_id]": {
+					required:true
+				},
+				"company[email_id]": {
+					required:true,
+					email:true
+				}
+			},
+			messages: {
+				"company[company_name]": {
+					required:flexymsg.required
+				},
+				"company[company_info]": {
+					required:flexymsg.required
+				},
+				"company['address']": {
+					required:flexymsg.required
+				},
+				"company['tax_id']": {
+					required:flexymsg.required,
+					number:flexymsg.number
+				},
+				"company['twitter_id']": {
+					required:flexymsg.required,
+				},
+				"company['facebook_id']": {
+					required:flexymsg.required
+				},
+				"company[linkedin_id]": {
+					required:flexymsg.required
+				},
+				"company[email_id]": {
+					required:true,
+					email:flexymsg.email
+				}
+			}
+		});
+		var x=validator.form();
+	return validator.form();
+		}
+</script>
+<style>
+	label.error	{
+		color:#FF0000;
+		font-size:15px;
+	}
+</style>
+{/literal}
+<form action="##LBL_ADMIN_SITE_URL##company/insertcompany_information" enctype="multipart/form-data" id="comp_info" name="comp_info" method="post" onsubmit="return validate_company_information();">
+<div id="dv1">
+<div class="box box-75 altbox">
+    <div class="boxin">
+        <div class="header">
+            <h3>Company Information</h3>
+        </div>
+        <div class="content">
+
+<table align="center" border="2">
+    <tr>
+    <td width="180" align="right">Company Name</td>
+    <td width="218"><input name="company[company_name]" type="text" id="company_name" value="{$sm.res.company_name}"/></td>
+  </tr>
+  <tr>
+    <td align="right">Company Information</td>
+    <td><input name="company[company_info]" type="text" id="company_information" value="{$sm.res.company_info}"/></td>
+  </tr>
+  <tr>
+    <td align="right">Number Of Employee</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td align="right">Upload a new CompanyLogo</td>
+    <td><input name="image" id="image" type="file" onChange="show_image()" /><span id="prev_image"><img src='##LBL_SITE_URL##image/thumb/companylogo/{$sm.res.logo}'/></span></td>
+  </tr>
+  <input type="hidden" id="hidimg" name="hidimg" value="{$sm.res.logo}">
+  <tr>
+    <td align="right">Address</td>
+    <td><textarea name="company[address]" >{$sm.res.address}</textarea></td>
+  </tr>
+  <tr>
+    <td align="right">Tax ID</td>
+    <td><input name="company[tax_id]" type="text" id="tax_id" value="{$sm.res.tax_id}"/></td>
+  </tr>
+  <tr>
+    <td align="right">Twitter Id</td>
+    <td><input name="company[twitter_id]" type="text" id="twitter_id" value="{$sm.res.twitter_id}"/></td>
+  </tr>
+  <tr>
+    <td align="right">Facebook Id</td>
+    <td><input name="company[facebook_id]" type="text" id="facebook_id" value="{$sm.res.facebook_id}"/></td>
+  </tr>
+  <tr>
+    <td align="right">Linkedin ID</td>
+    <td><input name="company[linkedin_id]" type="text" id="linkedin_id" value="{$sm.res.linkedin_id}"/></td>
+  </tr>
+  <tr>
+    <td align="right">Company Email</td>
+    <td><input name="company[email_id]" type="text" id="email_id" value="{$sm.res.email_id}"/></td>
+  </tr>
+   <tr>
+    <td align="right"></td>
+    
+    <td><input name="submit" type="submit" value="Update">&nbsp;&nbsp;&nbsp;<input name="cancel" type="reset" value="Reset"></td>
+  </tr>
+  
+</table>
+</form>
+</div>
+</div>
+</div>

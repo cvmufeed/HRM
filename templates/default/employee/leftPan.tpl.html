@@ -1,0 +1,96 @@
+{assign var=emp_sts value=$util->get_values_from_config('EMPLOYMENT_STATUS')}
+<input type="hidden" value="{$smarty.session.msg}" id="jmsg">
+<input type="hidden" value="{$smarty.request.choice}" id="chc">
+<div id="leftpan" align="left">
+    <div align="center" class="relpos fltlft">
+        <a href="javascript:void(0);" onclick="editPhoto();">{if $smarty.session.avatar !=''}<img src="##LBL_SITE_URL##image/thumb/avatar/{$smarty.session.cur_emp_id}_{$smarty.session.avatar}" title="Edit your profile pic" id="profile_avatar" alt="Upload your photo"/>{else}<img src="##LBL_SITE_URL##templates/css_theme/img/avatar/profile/hrm_{if $smarty.session.gender eq 'M'}male{else}female{/if}.jpg" title="Profile Pic" id="profile_avatar" alt="Upload your photo"/>{/if}<div class="abspos">Change Photo</div></a>
+    </div>
+    <div class="fltlft" style="width:750px;">
+            <div class="cont_hdr1 fltlft" style="padding-left:0px;">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" style="width:722px;">Job details</div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+        <table width="100%" border="0">
+            <tr>
+                <td width="80%" valign="top">
+                    <table width="100%" style="margin:0px;">
+                        <tr>
+                            <td width="20%">Employee name:</td>
+                            <td width="80%">{$smarty.session.fullname}</td>
+                        </tr>
+                        {if $smarty.session.jobtitlename}
+                        <tr>
+                            <td>Job title:</td>
+                            <td>{$smarty.session.jobtitlename|capitalize:true|default:"NA"}</td>
+                        </tr>
+                        {/if}
+                        {if $smarty.session.teamname}
+                        <tr>
+                            <td>Team:</td>
+                            <td>{$smarty.session.teamname|capitalize:true|default:"NA"}</td>
+                        </tr>
+                        {/if}
+                        <tr>
+                            <td>Department:</td>
+                            <td>{$smarty.session.departmentname|capitalize:true}</td>
+                        </tr>
+                        <tr>
+                            <td>Division:</td>
+                            <td>{$smarty.session.divname|capitalize:true}</td>
+                        </tr>
+                        <tr>
+                            <td>Status:</td>
+                            <td>{$emp_sts[$smarty.session.empstatus]|capitalize:true}</td>
+                        </tr>
+                        <tr>
+                        	<td></td>
+                            {if $smarty.session.id_company && ($smarty.request.choice eq 'employeeDetail' || $smarty.request.choice eq 'updateTermination' || $sm.flag eq 'employeeDetail' )}
+                            <td>
+                            {if $smarty.session.id_company}
+                            	<input type="button" onclick="javascript:editJobProfile('{$smarty.session.cur_emp_id}');" class="login_btn" value="Edit" />{$smarty.session.ddd}
+                            {/if}&nbsp;&nbsp;
+                            {if $smarty.session.empstatus neq -1}
+                            	<input type="button" name="terminate" value="Terminate" onclick="terminateEmp();" class="login_btn">
+                             {/if}
+                            </td>
+                            {/if}
+                        </tr>
+                        <tr><td colspan="2" height="10"></td></tr>
+                    </table>
+                </td>
+                
+            </tr>
+        </table>
+        
+    </div>
+	<div class="clear"></div>
+</div>
+{literal}
+<script type="text/javascript">
+function editJobProfile(id){
+		cShowActivity('');
+		var url = "##LBL_SITE_URL##index.php/";
+		$.post(url,{page:"employee",choice:"editJobProfile",id:id,ce:0},function(res){
+			show_fancybox(res);
+			right_sel();
+		});
+	}
+$(document).ready(function(){
+	var wid = parseInt($('.relpos img').height());
+	wid = 130-wid;
+	wid /=2;
+	$('.relpos img').css({
+		marginTop:wid+'px'
+	});
+	$('.relpos').hover(function(){
+		$('.relpos img').fadeTo('slow',0.33);
+		$('.abspos').fadeIn('slow');
+	},function(){
+		$('.relpos img').fadeTo('slow',1);
+		$('.abspos').fadeOut('slow');
+	});
+});
+</script>
+{/literal}

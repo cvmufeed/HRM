@@ -1,0 +1,54 @@
+<div style="margin-top:33px;">
+    <ul class="menu" id="menu">
+    <li class="openul">
+                    <div class="fltlft lft_prt"></div>
+                    <div class="fltlft mdl_prt"><a class="menulink" href="javascript:void(0);">Dashboard</a></div>
+                    <div class="fltlft rht_prt"></div><ul><li><a href="##LBL_SITE_URL##index.php/companyDashboard">Dashboard</a></li></ul>
+           </li>
+    <li class="openul">
+                    <div class="fltlft lft_prt"></div>
+                    <div class="fltlft mdl_prt"><a class="menulink" href="javascript:void(0);">Employee Info</a></div>
+                    <div class="fltlft rht_prt"></div><ul><li><a href="##LBL_SITE_URL##employee/employeeList">Employees</a></li></ul>
+           </li>
+    <li class="openul">
+                    <div class="fltlft lft_prt"></div>
+                    <div class="fltlft mdl_prt"><a class="menulink" href="javascript:void(0);">Leave</a></div>
+                    <div class="fltlft rht_prt"></div><ul><li><a href="##LBL_SITE_URL##leave/leaveTypes">Leave Type</a></li><li><a href="##LBL_SITE_URL##leave/leaveRequest">LeaveRequest</a></li></ul>
+           </li>
+    <li class="openul">
+                    <div class="fltlft lft_prt"></div>
+                    <div class="fltlft mdl_prt"><a class="menulink" href="javascript:void(0);">Travel</a></div>
+                    <div class="fltlft rht_prt"></div><ul><li><a href="##LBL_SITE_URL##travel/travelMode">Travel Mode</a></li><li><a href="##LBL_SITE_URL##travel/travelRequest">Travel Request</a></li><li><a href="##LBL_SITE_URL##travel/travelTypes">Travel Type</a></li></ul>
+           </li>
+    <li class="openul">
+                    <div class="fltlft lft_prt"></div>
+                    <div class="fltlft mdl_prt"><a class="menulink" href="javascript:void(0);">Reports</a></div>
+                    <div class="fltlft rht_prt"></div><ul><li><a href="##LBL_SITE_URL##report/ageProfile">Age profile</a></li><li><a href="##LBL_SITE_URL##report/companyProperties">Company properties</a></li><li><a href="##LBL_SITE_URL##report/employeeSalary">Employee salary</a></li><li><a href="##LBL_SITE_URL##report/employment_status">Employment status</a></li><li><a href="##LBL_SITE_URL##report/genderProfile">Gender profile</a></li><li><a href="##LBL_SITE_URL##report/employeeJoinings">Joining dates</a></li><li><a href="##LBL_SITE_URL##report/leaveSummery">Leave summary</a></li><li><a href="##LBL_SITE_URL##report/phoneNumbers">Phone numbers</a></li><li><a href="##LBL_SITE_URL##report/travelSummery">Travel Summary</a></li><li><a href="##LBL_SITE_URL##report/upcomingBirthdays">Upcoming birthdays</a></li></ul>
+           </li>
+    <li class="openul">
+                    <div class="fltlft lft_prt"></div>
+                    <div class="fltlft mdl_prt"><a class="menulink" href="javascript:void(0);">Administration</a></div>
+                    <div class="fltlft rht_prt"></div><ul><li><a href="##LBL_SITE_URL##adminstration/benefitManagement">Benefits</a></li><li><a href="##LBL_SITE_URL##adminstration/companyproperty">Company Properties</a></li><li><a href="##LBL_SITE_URL##adminstration/notifications">Notifications</a></li><li><a href="##LBL_SITE_URL##adminstration/reminders">Reminders</a></li></ul>
+           </li>
+    <li class="openul">
+                    <div class="fltlft lft_prt"></div>
+                    <div class="fltlft mdl_prt"><a class="menulink" href="javascript:void(0);">Settings</a></div>
+                    <div class="fltlft rht_prt"></div><ul><li><a href="##LBL_SITE_URL##setting/companyInfo">Company Information</a></li><li><a href="##LBL_SITE_URL##setting/listing">Configuration Settings</a></li><li><a href="##LBL_SITE_URL##setting/departments">Department</a></li><li><a href="##LBL_SITE_URL##setting/divisions">Division</a></li><li><a href="##LBL_SITE_URL##setting/hrForms">HR Forms</a></li><li><a href="##LBL_SITE_URL##setting/jobtitles">Job titles</a></li><li><a href="##LBL_SITE_URL##setting/modulelist">Modules</a></li><li><a href="##LBL_SITE_URL##setting/rolelist">Roles</a></li><li><a href="##LBL_SITE_URL##setting/team">Team</a></li><li><a href="##LBL_SITE_URL##setting/userlist">Users</a></li></ul>
+           </li></ul>
+     <div class="clrbth"></div>
+    </div>
+   <div class="clrbth"></div>
+  {literal}
+  <script type="text/javascript">
+   $(document).ready(function(){
+	$('ul#menu li.openul').hover(function(){
+		//$(this).find('ul').show();
+		jQuery(this).find('> ul').stop(true, true).slideDown(300).css('width','150px');
+
+	},function(){
+		$(this).find('ul').slideUp(300);
+	});
+  });
+   </script>
+  {/literal}
+  

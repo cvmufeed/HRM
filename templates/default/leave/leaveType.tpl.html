@@ -1,0 +1,145 @@
+{* notag *}
+{if defined($smarty.const.LINK_SEPARATOR)}
+	{assign var=sep value=$smarty.const.LINK_SEPARATOR}
+{else}
+	{assign var=sep value="-"}
+{/if}
+<div id="leave_leave_type" align="center">
+    <div class="sml_box">
+        <div class="top"></div>
+        <div class="mdl" style="margin-left:1px;">
+            <div class="cont_hdr1 fltlft">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" align="left">Leave types ({$sm.next_prev->total})</div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>	
+            <div class="txtbg_top_sml"></div>
+            <div class="txtbg_mdl_sml">
+				<form method="post" action="##LBL_SITE_URL##index.php/leave/addLeaveTypes/ce-0" id="leave_typ"  name="leave_typ" onsubmit="return validate_leavetype();">
+                <input type="hidden" name="qstart" id="qstart" value="{$sm.next_prev->start}" />
+                <input type="hidden" name="cnt" id="cnt" value="{$sm.list|@count}" />
+                Leave type: <input type="text" id="leave_type" name="leave_type" size="30"><input type="submit" value="Add" id="sub" class="login_btn_sml"><input type="button" id="canclLtype" value="Cancel" style="display:none" onclick="cancel();" class="login_btn_sml"><label class="error" generated="true" for="leave_type"></label><br>
+                <input type="hidden" id="temp_id" name="temp_id">
+                {if $sm.list}			
+                <table class="tbl_listing">
+                    <thead>
+                        <tr>
+                            <th>Leave type</th>
+                            <th>Number of employees</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">
+                                <td class="tl" width="39%">{$x.leave_type}</td>
+                                <td class="tl" width="30%">{if $sm.emp[$x.id_leave_type]}{$sm.emp[$x.id_leave_type]}{else}0{/if}</td>
+                                <td class="tl" width="14%"><a href="javascript:void(0);" onclick="editleave('{$x.id_leave_type}','{$x.leave_type|escape:'quotes'}');"><img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="edit" title="Edit"/></a></td>
+                                <td class="tl">{if !$sm.emp[$x.id_leave_type]}<a href="javascript:void(0);" onclick="return delleave('{$x.id_leave_type}','');"><img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="delete" title="Delete"/></a>{/if}</td>
+                            </tr>
+                        {/section}
+                    </tbody>
+                </table>
+                {if $sm.type=='advance'}
+                <div class="pagination_adv">
+                        {$sm.next_prev->generateadv()}
+                    </div>
+                {elseif $sm.type=='box'}
+                    <div class="pagination_box">
+                        <div align="center">{$sm.next_prev->generate()}</div>
+                    </div>
+                {elseif $sm.type=='normal'}
+                    <div class="pagination">
+                        <div align="center">{$sm.next_prev->generate()}</div>
+                    </div>
+                {elseif $sm.type=='nextprev'}
+                    <div class="pagination">
+                        <div align="center">{$sm.next_prev->onlynextprev()}</div>
+                    </div>
+                {elseif $sm.type=='extra'}
+                    <div class="pagination_box">
+                        <div align="center">{$sm.next_prev->generateextra()}</div>
+                    </div>
+                {else}
+                    {if $sm.type!='no'}
+                        <div>
+                            <div align="center">{$sm.next_prev->generate()}</div>
+                        </div>
+                    {/if}
+                {/if}
+                {else}
+                No records found.
+                    {/if}
+		</form>
+        	</div>
+            <div class="txtbg_btm_sml"></div>
+        </div>
+        <div class="btm"></div>
+    </div>
+    <br><div align=center>Note: If a leave type cannot be deleted, then this type is permanent in the database.</div>
+</div>
+
+
+
+{literal}
+<script type="text/javascript">
+$("#leave_type_name").autocomplete('##LBL_SITE_URL##index.php/leave/autoLeaveTypeName/ce-0-for-norauto', {autoPrefill: false});
+$("#leave_type_name").result(function(event, data, formatted) {
+	if(data) {
+		$('#leave_type_name').val(data[1]);
+ 	}
+});	
+function validate_leavetype() {
+	var validator=$("#leave_typ").validate({
+			rules: {
+				"leave_type": {
+					required:true
+				}
+			},
+			messages: {
+				"leave_type":{
+					required:flexymsg.required
+				}
+			}
+		});
+		var x=validator.form();
+		if(x)
+			cShowActivity('1');
+		return x;
+}
+function editleave(id,val){
+	$("#temp_id").val(id);
+	$(".error").html('');
+	$("#leave_type").val(val);
+	$('#canclLtype').show();
+	$("#sub").val('Update');
+	$("#leave_typ").attr("action","##LBL_SITE_URL##index.php/leave/updateLeavetype/ce-0");
+}
+function delleave(id,chc){
+	 var url="##LBL_SITE_URL##index.php/leave/deleteLeave";
+	 var qstart=$("#qstart").val();
+	 var cnt=$("#cnt").val();
+	 if(chc==''){
+		chc=jqueryConfirm("Do you really want to delete this record?","delleave",id);
+	 }
+	 if(chc){
+		cShowActivity('1');
+		 $.post(url,{ce:0,id:id,chk:1,cnt:cnt,qstart:qstart},function(res){
+			$('#leave_leave_type').html(res);
+			cHideActivity();
+		 });
+	 }else
+	 	return false;
+}
+function cancel(){
+	$("#leave_type").val('');
+	$(".error").html('');
+	$('#canclLtype').hide();
+	$("#sub").val('Add');
+	$("#leave_typ").attr("action","##LBL_SITE_URL##index.php/leave/addLeaveTypes/ce-0");
+}
+</script>
+{/literal}

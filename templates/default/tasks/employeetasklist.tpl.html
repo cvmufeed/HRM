@@ -1,0 +1,100 @@
+<div class="cont" id="tasks_details">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+   	<div class="content">
+
+            <div style="margin-right:10px;">
+            <div class="cont_hdr1 fltlft" style="padding-left:10px;">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" style="width:881px;">Task list ({$sm.list|@count})
+                <div class="fltrht"><input type="button" name="addtask" value="Add" onclick="addtask();" class="login_btn"/></div>
+                <div class="clear"></div>
+                </div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+
+<div class="cont_txt" style="margin-left:10px;">
+                        <div class="txtbg_top fltlft"></div>
+                        <div class="txtbg_mdl fltlft">
+
+
+                <input type="hidden" name="update_id" value="{$sm.res_personal.id_employee}" id="upd_id">
+                {if $sm.list}<br />
+                <table class="tbl_listing mrgtp0">
+                        <thead>
+                            <tr>
+                                <th><b>Task Name</b></th>
+                                <th><b>Task Description</b></th>
+                                <th><b>Task Date</b></th>
+                                <th><b>Modified Date</b></th>
+                                {if $smarty.session.id_employee}
+                                <th><b>Action</b></th>
+                                {/if}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                             <tr class="{cycle values="even,odd"}">
+                            <td>{$x.task_name}</td>
+                            <td>{$x.task_description|wordwrap:40:"<br />"}</td>
+                             <td>{$x.task_date}</td>
+                             <td>{$x.modified_date}</td>
+                            {if $smarty.session.id_employee}
+                            <td>
+                            <a href="javascript:void(0);" onclick="edittasks('edit','{$x.id_tasks}')">
+                                    <img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="" title="Edit"/></a>
+
+                            </td>
+                            {/if}
+                            </tr>
+                            {/section}
+                        </tbody>
+                     </table>
+                        {else}<br />
+                            <div align="center">There is no task list</div>
+                        {/if}
+
+
+                        </div>
+                        <div class="txtbg_btm fltlft"></div>
+                        <div class="clrbth"></div>
+</div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+	</div>
+    <div class="cont_bg_btm"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{literal}
+<script type="text/javascript">
+function addtask(){
+	cShowActivity('');
+	var id = $.trim($("#upd_id").val());
+	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"tasks",choice:"addtask",ce:0},function(res){
+		show_fancybox(res);
+	});
+}
+function edittasks(Edit,id_tasks){
+	cShowActivity('');
+    var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"tasks",choice:"edittask",ce:0,id:id_tasks},function(res){
+		show_fancybox(res);
+	});
+}
+
+</script>
+{/literal}

@@ -1,0 +1,115 @@
+<div class="cont" id="setting_module">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+   	<div class="content">
+
+            <div style="margin-right:10px;">
+            <div class="cont_hdr1 fltlft" style="padding-left:10px;">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" style="width:881px;">Module Features - {$sm.module.module_name} ({$sm.list|@count})
+                <div class="fltrht">{if $smarty.session.id_company}<input type="button" name="addmodules" value="Add" onclick="addfeatures('{$sm.module.id_modules}');" class="login_btn"/>{/if}</div>
+                <div class="clear"></div>
+                </div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+
+<div class="cont_txt" style="margin-left:10px;">
+                        <div class="txtbg_top fltlft"></div>
+                        <div class="txtbg_mdl fltlft">
+
+
+               {if $sm.list}<br />
+                <table class="tbl_listing mrgtp0">
+                         <thead>
+                            <tr>
+                                <th><b>Features Name</b></th>
+                                <th><b>Iswriteaccess.</b></th>
+                                 <th><b>Date Created.</b></th>
+                                {if $smarty.session.id_company}
+                                <th><b>Action</b></th>
+                                {/if}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">
+                            <td> {$x.features_name|capitalize:true|default:"NA"}</a></td>
+                            <td>{$x.iswriteaccess}</td>
+                             <td>{$x.create_date}</td>
+                            {if $smarty.session.id_company}
+                            <td>
+                            <a href="javascript:void(0);" onclick="editfeatures('edit','{$x.id_modulefeatures}','{$sm.module.id_modules}')">
+                                    <img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="" title="Edit"/></a>
+                                <img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="delete" title="Delete" onclick="return del('{$x.id_modulefeatures}','');" style="cursor:pointer;">
+                            </td>
+                            {/if}
+                            </tr>
+                            {/section}
+                        </tbody>
+                     </table>
+                        {else}<br />
+                            <div align="center">There is no features for this modules</div>
+                        {/if}
+
+
+                        </div>
+                        <div class="txtbg_btm fltlft"></div>
+                        <div class="clrbth"></div>
+</div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+	</div>
+    <div class="cont_bg_btm"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{literal}
+<script type="text/javascript">
+function addfeatures(id_modules){
+	cShowActivity('');
+	//var id = $.trim($("#upd_id").val());
+	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"setting",choice:"addfeatures",ce:0,id_modules:id_modules},function(res){
+		show_fancybox(res);
+	});
+}
+function editfeatures(edit,id_features,id_modules){
+	cShowActivity('');
+ 	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"setting",choice:"editfeatures",ce:0,id:id_features,id_modules:id_modules},function(res){
+		show_fancybox(res);
+	});
+}
+var id_modulefeatures;
+function del(id_modulefeatures,chc){
+
+	if(chc==''){
+		chc=jqueryConfirm("Do you really want to delete this record?","del",id_modulefeatures);
+	}
+	if(chc){
+		cShowActivity('1');
+	}else{
+		return false;
+	}
+ 	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"setting",choice:"deletefeatures",ce:0,id_modulefeatures:id_modulefeatures},function(res){
+		$("#setting_module").html(res);
+		cHideActivity();
+	});
+}
+
+
+</script>
+{/literal}

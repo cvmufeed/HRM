@@ -1,0 +1,62 @@
+<link href="##LBL_SITE_URL##uploadify/uploadify.css" type="text/css" rel="stylesheet" />
+<!--<script type="text/javascript" src="##LBL_SITE_URL##uploadify/jquery-1.4.2.min.js"></script>-->
+<script type="text/javascript" src="##LBL_SITE_URL##uploadify/swfobject.js"></script>
+<script type="text/javascript" src="##LBL_SITE_URL##uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+	var id_parent='{/literal}{$sm.idparent}{literal}';
+	var id_company='{/literal}{$smarty.session.id_company}{literal}';
+	$('#file_upload').uploadify({
+		'buttonText'   : 'Upload Files',
+		'uploader'    : '##LBL_SITE_URL##uploadify/uploadify.swf',
+		'script'      : '##LBL_SITE_URL##file/uploadFile/ce-0-id_company-'+id_company+'-id_parent-'+id_parent,
+		'cancelImg'   : '##LBL_SITE_URL##uploadify/cancel.png',
+		'folder'      : '##LBL_SITE_URL##files/files',
+		'fileDesc'    : 'All Files',
+		//'expressInstall' : 'http://demos4clients.com/uploadify/expressInstall.swf'
+		'multi'       : true,   
+		'onProgress'  : function(event,ID,fileObj,data) {
+			var speed=data.speed*1024;
+			var rbyte=fileObj.size-data.bytesLoaded;
+			var rtime=rbyte/speed;
+			var res=Math.floor(rtime);
+			alert("onProgress : "+res);				
+			if(parseInt(res) >= 60){		
+				var m=Math.floor(res / 60);
+				var s=res-m*60;				
+				$('#uploadfile').html(parseInt(m)+" minutes to complete");
+			}else if(parseInt(res) < 60 && parseInt(res) > 0) {
+				$('#uploadfile').html(res+" seconds to complete");
+			}
+			$('#uploadbtn').show();
+		},  
+		'onComplete'  : function(event, ID, fileObj, response, data){
+			alert("onComplete : "+response);	
+			if(check_JSsession(response,0)) {
+				alert("onComplete : "+response);		
+				var res=response.split("::");
+				var hid = $('#hid').val();   	
+				$('#preview').append("<div id='preview"+hid+"' ></div>");		
+				hid=parseInt(hid)+1; 	
+				$('#hid').val(hid);
+				$('#uploadfile').html('');
+				$('#uploadbtn').hide();
+				searchFile(res[1]);
+			}
+		},
+		'onSelect'  : function(event, ID, fileObj, response, data){
+			$('#uploadbtn').show();
+		},
+		'onCancel': function () {
+			$('#uploadbtn').hide();
+		}
+	});
+});
+</script>
+{/literal}
+	<input id="file_upload" name="file_upload" type="file"/>
+	<div id="uploadfile"></div>
+	<a href="javascript:$('#file_upload').uploadifyUpload();" id="uploadbtn" style="display:none;">Upload</a>
+	<input type="hidden" id="hid" value="1">
+	<div id="preview"></div>

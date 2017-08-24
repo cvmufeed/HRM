@@ -1,0 +1,38 @@
+	<div id="nav_list_cont">
+		<ul id="nav_list">
+            <li class="border">
+            	<a href="##LBL_ADMIN_SITE_URL##" title="Go to Home" class="menu_head">Home</a>
+            </li>
+            {if $smarty.session.id_developer}
+            <li class="border">
+            	<a href="#" class="menu_head">Management</a>
+                <ul style="visibility: hidden;">
+                    <li>
+                        <div class="nav-col">
+                        </div>
+				<div class="nav-col Last">
+					<a href="##LBL_ADMIN_SITE_URL##module/form_module"{if $smarty.request.page == 'module' && $smarty.request.choice =='form_module'}class="current"{/if}>Module</a>
+			{if $smarty.session.id_developer}
+					<a href="##LBL_ADMIN_SITE_URL##template/show"{if $smarty.request.page == 'template' && $smarty.request.choice =='show'}class="current"{/if}>Template</a>
+				</div>
+			{/if}
+                    </li>
+                </ul>
+            </li>
+            {/if}
+            <li class="border">
+            	<a href="#" class="menu_head">Settings</a>
+                <ul class="three-col" style="visibility: hidden;">
+                    <li>
+                        <div class="nav-col Last">
+                         	 <a href="##LBL_ADMIN_SITE_URL##setting/listing"{if $smarty.request.page == 'setting' && $smarty.request.choice =='listing'}class="current"{/if}>Config</a>
+                             <a href="##LBL_ADMIN_SITE_URL##setting/msg_list"{if $smarty.request.page == 'setting' && $smarty.request.choice =='msg_list'}class="current"{/if}>Message</a>
+</div>
+                    </li>
+                </ul>
+            </li>
+            <li class="border">
+            	<a class="menu_head" href="##LBL_SITE_URL##" target="_blank">Go to User Site &gt;&gt;</a>
+            </li>
+        </ul>
+    </div>

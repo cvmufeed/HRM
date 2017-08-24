@@ -1,0 +1,163 @@
+{* notag *}
+{if defined($smarty.const.LINK_SEPARATOR)}
+	{assign var=sep value=$smarty.const.LINK_SEPARATOR}
+{else}
+	{assign var=sep value="-"}
+{/if}
+<div id="setting_hrForms">
+	<div class="cont">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+    	<div class="cont_hdr1 fltlft">
+            <div class="cont_hdr_lft fltlft"></div>
+            <div class="cont_hdr_mdl1 fltlft">
+                <div class="fltlft">
+                	 HR forms list ({$sm.next_prev->total})
+                </div>
+                <div class="fltrht">
+                	<input type="button" name="addhrform" value="Add" onclick="addHrForm();"/>
+                </div>
+                <div class="clear"></div>
+                <input type="hidden" name="start" id="start" value="{$sm.next_prev->start}" />
+                <input type="hidden" name="cnt" id="cnt" value="{$sm.list|@count}" />
+            </div>
+            <div class="cont_hdr_rht fltlft"></div>
+	        <div class="clrbth"></div>
+        </div>
+        <div class="clrbth"></div>
+        <div class="cont_txt">
+            	<div class="txtbg_top fltlft"></div>
+                <div class="txtbg_mdl fltlft">
+                    {if $sm.list}
+                        <table width="97%" cellpadding="0" cellspacing="0" border="0" align="center" class="tbl_listing" style="margin-bottom:25px;">
+                        <thead>
+                        <tr>
+                            {foreach from=$sm.field item=item key=key}
+                                {if $key == $smarty.session.$m.sort_by}
+                                {if $smarty.session.$m.sort_order=="ASC"}
+                                    {assign var=cls value="asc"}
+                                {else}
+                                    {assign var=cls value="desc"}
+                                {/if}
+                                {else}
+                                {assign var=cls value=""}
+                                {/if}
+                                <th class="email">
+                                    {if $item.1!=0}
+                                    {if $sm.ajax}
+                                    <a href="javascript:get_next_page('##APP_ROOT_URL##{$sm.uri}/sort_by{$sep}{$key}',0,0,'{$smarty.request.page}_{$smarty.request.choice}')">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                    {else}
+                                    <a href="##APP_ROOT_URL##{$sm.uri}/sort_by{$sep}{$key}">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                    {/if}
+                                    {else}
+                                    {if $item!=""}{$item.0}{else}{$key}{/if}
+                                    {/if}
+                                </th>
+                             {/foreach}
+                            <th class="email brdr_none">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                        <tr class="{cycle values="even,odd"}">
+                            <td>{$x.form_name}</td>
+                            <td>{$x.file_name}</td>
+                            {assign var=a value=" "|explode:$x.updt}
+                            <td>{$x.add_date|date_format:"%d-%m-%Y"} (<b>{$x.updt}{if $a[0] > 1}s{/if} ago</b>)</td>
+                            <td>
+                                <a href='##LBL_SITE_URL##index.php/setting/downLoadHrForm/id_hr_form-{$x.id_hr_form}-ce-0'>
+                                <img src="##LBL_SITE_URL##templates/images/blue/download_img.png" alt="" title="Download"/></a>			
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(0);" onclick="editHrform('{$x.id_hr_form}')">
+                                <img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="" title="Edit"/></a>			
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(0);" onclick="return remove_hrForm('{$x.id_hr_form}','{$x.file_name}','')">
+                                <img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="" title="Delete"/></a>
+                            </td>
+                        </tr>
+                        {/section}
+                        </tbody>
+                        </table>
+                        <div>
+                            {if $sm.type=='advance'}
+                            <div class="pagination_adv">
+                            {$sm.next_prev->generateadv()}
+                            </div>
+                            {elseif $sm.type=='box'}
+                            <div class="pagination_box">
+                            <div align="center">{$sm.next_prev->generate()}</div>
+                            </div>
+                            {elseif $sm.type=='normal'}
+                            <div class="pagination">
+                            <div align="center">{$sm.next_prev->generate()}</div>
+                            </div>
+                            {elseif $sm.type=='nextprev'}
+                            <div class="pagination">
+                            <div align="center">{$sm.next_prev->onlynextprev()}</div>
+                            </div>
+                            {elseif $sm.type=='extra'}
+                            <div class="pagination_box">
+                            <div align="center">{$sm.next_prev->generateextra()}</div>
+                            </div>
+                            {else}
+                            {if $sm.type!='no'}
+                            <div>
+                                <div align="center">{$sm.next_prev->generate()}</div>
+                            </div>
+                            {/if}
+                            {/if}
+                        </div>
+                    {else}
+                        <div>No Record found.</div>
+                    {/if}
+                </div>
+                <div class="txtbg_btm fltlft"></div>
+                <div class="clrbth"></div>
+        </div>
+    </div>
+    <div class="cont_bg_btm"></div>
+</div>
+</div>
+{literal}
+<script type="text/javascript">	
+	function remove_hrForm(id,fname,chc){
+		 var url="##LBL_SITE_URL##index.php/setting/remove_HrForm/ce-0-?";
+		 if(chc==''){
+			chc=jqueryConfirm("Do you really want to delete this file?","remove_hrForm",id,fname);
+		 }
+		 var qstart=$("#start").val();
+		 var cnt=$("#cnt").val();
+		 if(chc){
+			 cShowActivity('1');
+			 $.post(url,{id_hr_form:id,file_name:fname,qstart:qstart,cnt:cnt,chk:1},function(res){
+				if(check_JSsession(res,1)) {
+				 	$('#setting_hrForms').html(res);
+					cHideActivity();
+				}
+			 });
+		 }else{
+		 	return false;
+		 }
+	}
+	
+	function addHrForm(){
+		var url="##LBL_SITE_URL##index.php/setting/addHrForm/ce-0";
+		cShowActivity('');
+		$.post(url,function(res){
+			if(check_JSsession(res,1)) {
+				show_fancybox(res);
+			}
+		});
+	}
+	function editHrform(id){
+		var url="##LBL_SITE_URL##index.php/setting/editHrForm/ce-0";
+		cShowActivity('');
+		$.post(url,{id_hr_form:id},function(res){
+			if(check_JSsession(res,1)) {
+				show_fancybox(res);
+			}
+		});
+	}
+</script>
+{/literal}

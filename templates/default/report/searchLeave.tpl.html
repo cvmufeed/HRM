@@ -1,0 +1,111 @@
+<div id="report_Leave" align="center">
+	<table>
+    	<tr>
+        	<td valign="top"><div class="smler_box">
+        <div class="top"></div>
+        <div class="mdl" style="padding-bottom:5px;">
+            <div class="cont_hdr1 fltlft">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" align="left">Search</div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>	
+            <form method="post" action="##LBL_SITE_URL##report/leaveSummery" id="leavesumry"  name="leavesumry" onsubmit="return validate_leavesumry();">
+                    <input type="hidden" id="temp_id" name="temp_id">		
+                    <table class="listing_tbl" border="0">
+                    <tr>
+                        <td>Group By: </td>
+                        <td>
+                            <input type="radio" name="group_by" id="group_by_type" checked="true" onclick="return listing();" value="1">&nbsp;Leave type &emsp;<input type="radio" name="group_by" id="group_by_emp" onclick="return listing();" value="2">&nbsp;Employee
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Leave types: </td>
+                        <td>
+                            <select name="leave_type" id="leave_type">
+                                <option value="">All</option>
+                                {html_options options=$sm.leave_type values=$sm.leave_type}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">Employees:  </td>
+                        <td>
+                            <select name="emp" id="emp" onchange="return change();">
+                                <option value="">All</option>
+                                <option value="Individual">Individual</option>
+                            </select><br>
+                            <label id="l1"  style="display:none">Employee name:<input type="text" name="leave[indiv]" id="indiv"></label>
+                            <input type="hidden" id='id_employee' name='id_employee'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Date from: </td>
+                        <td><input type="text" name="frm_date" id="frm_date"><!--<img src="##LBL_SITE_URL##templates/css_theme/img/daterange/calendar.gif" id="imge" onclick="return showdate();">--></td>
+                    </tr>
+                    <tr>
+                        <td>Date to: </td>
+                        <td><input type="text" name="to_date" id="to_date"></td>
+                    </tr>
+                    <tr>
+                    	<td></td>
+                        <td><input type="button" value="Generate" id="sb" onclick="return listing();" class="login_btn"></td>
+                    </tr>
+                    </table>
+                </form>
+        </div>
+        <div class="btm"></div>
+    </div></td>
+        	<td valign="top">
+                {if !$sm.flg}
+                    <div id="report_searchLeave">
+                        {include file="report/leaveSummeryListing"}
+                    </div>
+                {/if}
+            </td>
+        </tr>
+    </table>    
+</div>
+{literal}
+<script type="text/javascript">
+function listing(){
+	var temp=$("#emp").val();
+	if(temp=='Individual'){
+		if(!$("#indiv").val()){
+			jqueryAlert("Please choose an individual");
+			return false;
+		}
+	}
+	cShowActivity('1');
+	var x=$("#leavesumry").serialize();
+	var url="##LBL_SITE_URL##report/leaveSummery?"+x;
+	$.post(url,{ce:0,search_status:1},function(res){
+		$("#report_searchLeave").html(res);
+		cHideActivity('');
+	});
+
+}
+
+$(document).ready(function(){
+	$('#frm_date,#to_date').datepicker({
+		dateFormat: "dd-mm-yy",
+		beforeShow: customRange
+	});
+});
+function customRange(input) {  //for date validation
+	return {minDate: (input.id == 'to_date' ? $('#frm_date').datepicker('getDate') : null),  
+	maxDate: (input.id == 'frm_date' ? $('#to_date').datepicker('getDate') : null)};  
+}	
+
+function change(){
+	var temp=$("#emp").val();
+	if(temp=='Individual'){
+		$("#l1").show();
+	}else{
+		$("#indiv").val('');
+		$("#id_employee").val('');
+		$("#l1").hide();
+	}
+}
+</script>
+{/literal}

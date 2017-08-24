@@ -1,0 +1,107 @@
+ <span id="assign_rolefeatures_msg" class="error"></span><br>
+    <form id="assign_rolefeatures" name="assign_rolefeatures" method="post" action="javascript:void(0);" onsubmit="validate(this);">
+        <table class="listing_tbl" >
+
+                   <tr id="featureslist">
+               <table class="tbl_listing mrgtp0">
+                         <thead>
+                            <tr>
+                                <th><b>Is Visible</b></th>
+                                <th><b>Feature Name.</b></th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.assignfeatures}
+                        {assign var=x value=$sm.assignfeatures[cur]}
+                       <input type="hidden" id="id_modulefeatures[]" name="id_modulefeatures[]" value="{$x.id_modulefeatures}">
+                       <input type="hidden" id="id_modules[]" name="id_modules[]" value="{$x.id_modules}">
+                       <input type="hidden" id="id_roles[]" name="id_roles[]" value="{$x.id_roles}">
+                        <tr class="{cycle values="even,odd"}">
+
+                        {if $x.isvisible}
+<td><input type="checkbox"  id="assignfeatures[]" name="assignfeatures[]"     value="1" checked="checked" ></td>
+                        {else}
+                <td><input type="checkbox"  id="assignfeatures[]" name="assignfeatures[]" {if checked} value="1" {else} value="0" {/if}></td>
+                {/if}
+      <td>{$x.features_name}</td>
+
+                            </tr>
+                            {/section}
+                        </tbody>
+                     </table>
+
+         </tr>
+        <tr>
+
+         {if $sm.assignfeatures}
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td>
+                <input type="submit" name="save_property" value="Save" class="login_btn">
+            </td>
+                    {/if}
+        </tr>
+
+
+        </table>
+        </form>
+
+
+        
+{literal}
+<script type="text/javascript">
+function validate(){
+var a=new Array();
+var b=new Array();
+var c= new Array();
+var isvisible;
+var id_modulefeatures;
+var id_modules;
+var id_roles;
+	a=document.getElementsByName("assignfeatures[]");
+	//alert("Length:"+a.length);
+	b=document.getElementsByName("id_modulefeatures[]");
+	c=document.getElementsByName("id_modules[]");
+	d=document.getElementsByName("id_roles[]");
+	var p=0;
+	for(i=0;i<a.length;i++){
+        id_roles=c[i].value;
+         if(a[i].checked)
+         isvisible=a[i].value;
+         else
+         isvisible=0;
+        id_modulefeatures=b[i].value;
+       id_modules=c[i].value;
+       id_roles=d[i].value;
+        cShowActivity('');
+		var url = '##LBL_SITE_URL##index.php/';
+       	$.post(url,{page:"setting",choice:"insertassignrolefeatures",id_roles:id_roles,id_modules:id_modules,isvisible:isvisible,id_modulefeatures:id_modulefeatures},function(res){
+       var msg="Successfully Inserted.";
+	   callmsg(msg);
+        cHideActivity('1');
+
+        });
+
+
+	}
+
+}
+
+</script>
+<style type="text/css">
+#add_modules .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#add_modules select {
+	border:1px solid #ccc;
+	width:209px;
+	padding:4px;
+}
+</style>
+{/literal}
+

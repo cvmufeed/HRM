@@ -1,0 +1,223 @@
+<input type="hidden" name="qstart" value="{$sm.next_prev->start}" id="qstart">
+<input type="hidden" name="rshow" value="{$sm.show}" id="rshow">
+<input type="hidden" name="rtot" value="{$sm.next_prev->total}" id="rtot">
+<div class="cont">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+        <div class="cont_hdr1 fltlft">
+		{if $smarty.session.id_company}
+        
+			<div class="cont_txt">
+			<div class="txtbg_top fltlft"></div>
+				<div class="txtbg_mdl fltlft">
+		
+				<div align="center" style="margin-bottom:5px;">
+						Filter By : 
+						{foreach key=key item=item from=$sm.status}
+							{assign var=l value=$sm.leavestatus[$key]}
+							<input type="checkbox" name="leave_status[]" id="leave_type{$key}" value="{$key}" onclick="searchLeaveRequest('','','','0');" class="leavestatus" {if $key==$l}checked="checked"{/if}>&nbsp;{$item}
+			 			{/foreach}
+				</div>
+			</div>
+				<div class="txtbg_btm fltlft"></div>
+			<div class="clear"></div>
+			</div>
+  		{/if}
+        	<div class="cont_hdr1" style="padding-left:10px;">
+            <div class="cont_hdr_lft fltlft"></div>		
+            <div class="cont_hdr_mdl1 fltlft" style="width:881px;">Leave requests ({$sm.next_prev->total})
+            	<div class="fltrht">
+                      {if $smarty.session.id_employee}<input type="button" name="addLeaveReq" value="Apply" onclick="addLeave();"/>{/if}
+                      {if $sm.list}<input type="button" name="deleteLeave" value="Delete" onclick="deleteAll('chkbox_leave','');"/>{/if}
+                </div>                
+            </div>
+			<div class="cont_hdr_rht fltlft"></div>
+	        <div class="clrbth"></div>
+            </div>
+        </div>
+        <div class="clrbth"></div>
+        <div class="cont_txt">
+        <div class="txtbg_top fltlft"></div>
+		<div class="txtbg_mdl fltlft">
+        {if $sm.list}
+        	<table id="tbl" class="tbl_listing">
+		<thead>
+			<tr>
+				<th>
+					{if $sm.list}
+					<input type="checkbox" name="chk_all" id="chk_all" onclick="checkUncheck('chkbox_leave');" title="Check to select all records">
+					{/if}
+				</th>
+				{if $smarty.session.id_company}
+				<th>Profile Pic</th>
+				{/if}
+				<th align="left">Employee</th>
+				<th align="left">Type</th>
+				<th align="left">From</th>
+				<th align="left">To</th>
+				<th align="left">Working days</th>
+				<th align="left">Note</th>
+				<th align="left" width="97">Status</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+		{section name=cur loop=$sm.list}
+		{assign var=x value=$sm.list[cur]}
+		    <tr class="{cycle values="even,odd"}">
+		    	<td>
+		    		{if $x.leave_status eq 1 || $smarty.session.id_company}
+		    		<input type="checkbox" name="chk_box" id="chk{$x.id_leave_req}" value="{$x.id_leave_req}" class="chkbox_leave">
+		    		{else}
+		    		<input type="checkbox" name="chk_box" id="chk{$x.id_leave_req}" value="{$x.id_leave_req}" disabled>
+		    		{/if}
+		    	</td>
+		    	{if $smarty.session.id_company}
+			<td onclick="empDetail('{$x.id_employee}');" style="cursor:pointer;">
+	    			{if $sm.employee[$x.id_employee].avatar eq ''}
+	    				<img src="##LBL_SITE_URL##templates/css_theme/img/avatar/search/hrm_{if $sm.employee[$x.id_employee].gender eq M}male.jpg{else}female.jpg{/if}" title="Profile Pic">&emsp;
+	    			{else}
+	    				<img src="##LBL_SITE_URL##image/thumb4_search/avatar/{$x.id_employee}_{$sm.employee[$x.id_employee].avatar}" title="Profile Pic">
+	    			{/if}
+			</td>
+			{/if}
+			<td>{$sm.employee[$x.id_employee].name}</td>
+			<td>{$sm.leave_type_res[$x.leave_type]|capitalize}</td>
+			<td>{$x.from_date|date_format:"%d-%m-%Y"}</td>
+			<td>{$x.to_date|date_format:"%d-%m-%Y"}</td>
+			<td align="center">{$x.work_days}</td>
+			<td>{$x.notes}</td>
+			<td>
+				{if $smarty.session.id_company && $x.leave_status eq 1}
+					<select id="cur_leave_status{$x.id_leave_req}" name="change[leave_type]" onchange="changeLeaveType('{$x.id_leave_req}');">
+					{html_options options=$sm.status selected=$x.leave_status}
+					</select>
+				{else}
+					{$sm.status[$x.leave_status]}	
+				{/if}
+			</td>
+			<td>
+				{if ($x.leave_status eq 1 || $smarty.session.id_company)} 
+                    <img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="edit" title="Edit" onclick="editLeave('{$x.id_leave_req}');" style="cursor:pointer;">
+                {else}
+                    NA
+                {/if}
+            </td>
+		    </tr>
+		    {/section} 
+		</tbody>
+	</table>
+            {if $sm.type=='advance'}
+                <div class="pagination_adv">
+                    {$sm.next_prev->generateadv()}
+                </div>
+            {elseif $sm.type=='box'}
+                <div class="pagination_box">
+                    <div align="center">{$sm.next_prev->generate()}</div>
+                </div>
+            {elseif $sm.type=='normal'}
+                <div class="pagination">
+                    <div align="center">{$sm.next_prev->generate()}</div>
+                </div>
+            {elseif $sm.type=='nextprev'}
+                <div class="pagination">
+                    <div align="center">{$sm.next_prev->onlynextprev()}</div>
+                </div>
+            {elseif $sm.type=='extra'}
+                <div class="pagination_box">
+                    <div align="center">{$sm.next_prev->generateextra()}</div>
+                </div>
+            {else}
+                {if $sm.type!='no'}
+                    <div>
+                        <div align="center">{$sm.next_prev->generate()}</div>
+                    </div>
+                {/if}
+            {/if}
+        {else}
+         	<br><div align="center">No leave request found.</div><br>
+    	{/if}
+        </div>
+		<div class="txtbg_btm fltlft"></div>
+        <div class="clear"></div>
+        </div>
+    </div>
+    <div class="cont_bg_btm"></div>
+</div>
+{literal}
+<script type="text/javascript">
+	var msg = '{/literal}{$smarty.session.amsg}{literal}';
+	callmsg(msg);
+	function deleteAll(cls,chc) {
+		var keys='';
+		var i=0;
+		$('.'+cls).each(function(){
+			if($(this).is(':checked')){
+				keys +=","+$(this).val();
+				i++;
+			}
+		});
+		keys=keys.substr(1);
+		var rshoid='rshow';
+		var rshow = parseInt($("#"+rshoid).val());
+		var rtot = parseInt($("#rtot").val()) - i;
+		var qstrt = parseInt($.trim($("#qstart").val()));
+		var qs = (rtot%rshow)!=0 || (qstrt!=rtot) || (qstrt==0 && rtot==0) ? '' : Math.floor((rtot-1)/rshow)*rshow;
+		if(!keys){
+			jqueryAlert("Select atleast one checkbox.");
+			return false;
+		}else{
+			if(chc==''){
+				chc=jqueryConfirm("Are you sure want to delete leave request(s) ?","deleteAll",cls);
+			}
+			if(chc){
+				searchLeaveRequest('for_del','',keys,qs);
+			}
+		}
+	}
+	function addLeave(){
+		cShowActivity('');
+		var url = "##LBL_SITE_URL##index.php/";
+		$.post(url,{page:"leave",choice:"addLeave",ce:0},function(res){
+			show_fancybox(res);
+		});
+	}
+	function checkUncheck(cls){
+		if(document.getElementById("chk_all").checked==true){
+			$('.'+cls).each(function(){	$(this).attr('checked','checked');  });
+		}else{
+			$('.'+cls).each(function(){	$(this).removeAttr('checked');	 });
+		}
+	}
+	function editLeave(id_leave){
+		cShowActivity('');
+		var url = "##LBL_SITE_URL##index.php/";
+		$.post(url,{page:"leave",choice:"editLeave",ce:0,id_leave:id_leave},function(res){
+			show_fancybox(res);
+		});
+	}
+	function changeLeaveType(id_leave){
+		var status=$.trim($("#cur_leave_status"+id_leave).val());
+		var leavestatus='';
+		$('.leavestatus').each(function(){
+			if($(this).is(':checked'))
+			leavestatus+=","+$(this).val();
+		});
+		var i=1;
+		var rshoid='rshow';
+		var rshow = parseInt($("#"+rshoid).val());
+		var rtot = parseInt($("#rtot").val()) - i;
+		var qstrt = parseInt($.trim($("#qstart").val()));
+		var qs = (rtot%rshow)!=0 || (qstrt!=rtot) || (qstrt==0 && rtot==0) ? '' : Math.floor((rtot-1)/rshow)*rshow;
+		if(qs===''){
+			qs=$.trim($("#qstart").val());
+		}
+		var url = "##LBL_SITE_URL##index.php/";
+		cShowActivity('1');
+		$.post(url,{page:"leave",choice:"updateLeaveStatus",ce:0,id_leave:id_leave,status:status,qs:qs,chk:1,leavestatus:leavestatus},function(res){
+			$("#leave_leaveRequest").html(res);
+			cHideActivity();
+		});
+	}
+</script>
+{/literal}

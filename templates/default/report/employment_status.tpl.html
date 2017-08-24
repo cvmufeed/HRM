@@ -1,0 +1,117 @@
+{literal}
+<link rel="stylesheet" type="text/css" href="##LBL_SITE_URL##templates/css_theme/jquery.jqplot.css" />
+<!-- BEGIN: load jqplot -->
+<script language="javascript" type="text/javascript" src="##LBL_SITE_URL##templates/flexyjs/jquery.jqplot.js"></script>
+<script language="javascript" type="text/javascript" src="##LBL_SITE_URL##templates/flexyjs/jqplot.pieRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="##LBL_SITE_URL##templates/flexyjs/jqplot.categoryAxisRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="##LBL_SITE_URL##templates/flexyjs/jqplot.barRenderer.js"></script>
+
+<script type="text/javascript" src="##JS_PATH##libsext/jquery/json.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var arr = '{/literal}{$sm.x}{literal}';
+		if(arr)
+			pieEmpStatusChart();
+		else
+			return false;
+	});
+	function pieEmpStatusChart(){
+		$("#empStatus").html('');
+ 	var arr1 = '{/literal}{section name=s1 loop=$sm.arr}
+					{assign var=x value=$sm.arr[s1]}{$x.1},{/section}{literal}';
+     var json_arrb = arr1.split(",")[0];
+     var json_arrb1 = arr1.split(",")[1];
+     var json_arrb2 = arr1.split(",")[2];
+     var json_arrb3 = arr1.split(",")[3];
+     var json_arrb4 = arr1.split(",")[4];
+     var json_arrb5 = arr1.split(",")[5];
+	var empStatusData = [['Full time permanent',+json_arrb], ['Terminated',+json_arrb1],['Part time permanent',+json_arrb1],['Internship',+json_arrb2],['Part time contract',+json_arrb3],['Full time contract',+json_arrb4],['Temporary status',+json_arrb5]];
+		var empStatusData = $.jqplot('empStatus', [empStatusData], {
+			title:'Employment Status Pie Chart',
+			grid: {
+			    drawBorder: true, 
+			    drawGridlines: true,
+			    background: '#ffffff',
+			    shadow:true
+			},
+			axesDefaults: {
+			    
+			},
+			seriesDefaults:{
+			    renderer:$.jqplot.PieRenderer,
+			    rendererOptions: {
+				showDataLabels: true
+			    }
+			},
+			legend: {
+			    show: true,
+			    rendererOptions: {
+				numberRows: 6
+			    },
+			    location: 's'
+			}
+		});
+		$("#empStatusBarPie").html('Click here for <a href="javascript:void(0);" onclick="barEmpStatusChart()">Employment Status Bar Chart</a>');
+	}
+
+	function barEmpStatusChart(){
+		$("#empStatus").html('');
+  	var arr1 = '{/literal}{section name=s1 loop=$sm.arr}
+					{assign var=x value=$sm.arr[s1]}{$x.1},{/section}{literal}';
+     var json_arrb = arr1.split(",")[0];
+     var json_arrb1 = arr1.split(",")[1];
+     var json_arrb2 = arr1.split(",")[2];
+     var json_arrb3 = arr1.split(",")[3];
+     var json_arrb4 = arr1.split(",")[4];
+     var json_arrb5 = arr1.split(",")[5];
+	var empStatusData = [['Full time permanent',+json_arrb], ['Terminated',+json_arrb1],['Part time permanent',+json_arrb1],['Internship',+json_arrb2],['Part time contract',+json_arrb3],['Full time contract',+json_arrb4],['Temporary status',+json_arrb5]];
+		var empStatusData = $.jqplot('empStatus', [empStatusData], {
+		    title:'Employment Status Bar Chart',
+		     seriesDefaults:{
+		       renderer:$.jqplot.BarRenderer, 
+		       rendererOptions:{
+		         barWidth:25, 
+		         barPadding:-15, 
+		         barMargin:15, 
+		         barDirection: 'vertical',
+		         varyBarColor: true
+		       }, 
+		       shadow:true
+		     },
+		     legend: {show:false},
+		     axes:{
+		         yaxis:{min:0, tickOptions: {formatString: '%.0f',showGridLine: true}},
+		         xaxis:{show: true, renderer: $.jqplot.CategoryAxisRenderer,
+		                    tickOptions: {show: true, showLabel: false},
+		                    showTicks: false}
+		         }
+		 });
+		$("#empStatusBarPie").html('Click here for <a href="javascript:void(0);" onclick="pieEmpStatusChart()">Employment Status Pie Chart</a>');
+	}
+	
+</script>
+{/literal}
+{if $sm.x}
+	<table>
+		<tr>
+			<td>
+				<div id="empStatus"  style="margin-top:20px; margin-left:20px; width:350px; height:350px; position:relative; z-index:0"></div>
+				<div id="empStatusBarPie" style="margin-top:10px;margin-left:20px;"></div>
+			</td>
+			<td>
+				<table>
+					{section name=s1 loop=$sm.arr}
+					{assign var=x value=$sm.arr[s1]}
+					<tr>
+					    	<td><font size='4'>{$x.0}</font></td>
+						<td> : </td>
+						<td><font size='4'>{$x.1}</font></td>
+					</tr>
+					{/section}
+				</table>
+			</td>
+		</tr>
+	</table>
+{else}
+	<div>Employee not found</div>
+{/if}

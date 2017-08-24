@@ -1,0 +1,192 @@
+<div style="width:490px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:418px;">
+            {if $sm.res.id_config}Edit{else}Add{/if} Config{if $sm.add_section} For {$sm.section.name}{/if}
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+<form id="addconfigform" name="addconfigform" action="javascript:void(0);" onSubmit="return validate_add();" method="post" class="basic">
+		<input type="hidden" name="id_config" id="id_config" value="{$sm.res.id_config}" />
+        	<table border="0" class="listing_tbl">
+            	<tr>
+                	<td  width="20%"><label for="some1">Section :</label></td>
+                    <td id="dd">
+                        {if $sm.add_section}
+                            <input type="hidden" class="text" name="sec[name]" id="id_section" value="{$sm.section.name}" />{$sm.section.name}
+                        {else}
+                            <select class="txt" name="sec[name]" id="id_section" onchange="setNew(this);" >  
+                                <option value="">--Section--</option>
+                                {html_options options=$sm.section selected=$sm.res.name}
+                                <option value="n">New</option>
+                            </select> 
+                        {/if}
+                    </td>
+                </tr>
+            	<tr>
+                	<td ><label for="sec[ckey]">Section Key :</label></td>
+                    <td>
+                    	<input type="text" id="id_key" name="sec[ckey]" value="{$sm.res.ckey}" />
+                		<lable id="id_err" style="display:none" class="error">Please enter another key value</label>
+                	</td>
+                </tr>
+            	<tr>
+                	<td ><label for="sec[f_type]">Field Type :</label></td>
+                    <td>
+                    	<select name="sec[f_type]" id="f_type" onchange="fieldValue(this);">
+							{html_options options=$sm.f_type selected=$sm.res.f_type}
+                    	</select>
+                    </td>
+                </tr>
+                </table>                
+                    	<div id="div_f_key" {if !$sm.res.id_config || $sm.res.f_type == 'text'}style="display:none"{/if}>
+                <table border="0" class="listing_tbl" style="margin-top:0px;">
+            	<tr>
+                	<td  width="20%"><label for="sec[f_key]">Field Key :</label></td>
+                    <td><input type="text" id="f_key" name="sec[f_key]" value="{$sm.res.f_key}" /><br /><font size=-1 color="red">[Use "," as separator in field key e.g, 0,1]</font></td>
+               </tr>
+               	<td  for="sec[f_value]">Field Value :</label></td>
+                <td><input type="text" id="f_value" name="sec[f_value]" value="{$sm.res.f_value}"/><br /><font size=-1 color="red">[Use "," as separator in field value e.g, false,true]</font>
+                    </td>
+                </tr>
+                <tr>
+                	<td colspan="2"><font size=-1 color="red">[Section value must be one or more(for check box must be in comma separated) of the value of Field Key]</font></td>
+                </tr>
+                </table>
+                        </div>
+                <table border="0" class="listing_tbl" style="margin-top:0px;">
+            	<tr>
+                	<td  width="20%"><label for="sec[value]">Section Value :</label></td>
+                    <td><input type="text" id="id_value" name="sec[value]" value="{$sm.res.value}" /></td>
+                </tr>
+            	<tr>
+                	<td ><label for="sec[comment]">Comment :</label></td>
+                    <td><textarea name="sec[comment]" id="id_comment">{$sm.res.comment}</textarea></td>
+                </tr>
+                <input type="hidden" id="id_edit" name="sec[is_editable]" checked="true" />
+            	<tr>
+                	<td></td>
+                    <td><input class="login_btn" type="submit" value={if !$sm.res.id_config}"Add"{else}Edit{/if} /></td>
+                </tr>
+            </table>
+            
+        </form>
+
+
+
+	</div>
+</div>
+{literal}
+<style type="text/css">
+	td label	{
+		margin:2px 0px;
+	}
+	.listing_tbl tr td input[type='text'],.listing_tbl tr td textarea,.listing_tbl tr td select	{
+		margin:2px 0px;
+	}
+</style>
+<script type="text/javascript">
+	forminfo("#addconfigform");
+	function setNew(obj){
+		if(obj.value=='n'){
+			$('#id_section').attr('name','secname')
+			$('#id_section').after('<input size="26" class="txt" type="text" id="id_sectxt" name="sec[name]" >');
+		}else{
+			if($('#dd').find('input').length){
+				$('#id_section').attr('name','sec[name]');
+				$('#id_sectxt').remove();
+				$('#dd').find('label').remove();
+			}
+		}
+	}
+
+	function fieldValue(obj){
+		//jqueryAlert(obj.value);return;
+		if(obj.value!='text'){
+			$('#div_f_key').show();
+		}else{
+			$('#div_f_key').hide();
+		}
+	}
+	function validate_add(url){
+		var validator=$("#addconfigform").validate({
+			rules: {
+				"sec[name]":{
+					required:true
+				},
+				"sec[ckey]":{
+					required:true
+				},
+				"sec[f_key]":{
+					required:function(element) {
+						v2=$("#f_type").val();
+						return (v2!="text");
+		  			 }
+				},
+				"sec[f_value]":{
+					required:function(element) {
+						v2=$("#f_type").val();
+						return (v2!="text");
+		  			 }
+				},		
+				"sec[value]":{
+					required:true
+				}
+			}
+			});
+		var x=validator.form();
+		if(x){ 
+			cShowActivity('2');
+			//document.addconfigform.reset();return ;
+			var name='';
+			if($('#dd').find('input').length){
+				if($('#dd').find("input[id='id_sectxt']").length)
+					name = $('#id_sectxt').val();
+				else
+					name = name=$('#id_section').val();
+			}else
+				name=$('#id_section').val();
+
+			var ckey=$('#id_key').val();
+			var field_type=$('#f_type').val();
+			var field_key = '';
+			var field_value = '';
+			if($('#f_key').val()) {
+				field_key=$('#f_key').val();
+			}
+			if($('#f_key').val()) {
+				field_value=$('#f_value').val();
+			}
+			var sec_value=$('#id_value').val();
+			var comment=$('#id_comment').val();
+			if($('#id_edit').is(':checked')){
+				var edit=1;
+			}else{
+				var edit=0;
+			}
+			var id='';
+			var url='##LBL_SITE_URL##index.php/page-setting-choice-set_config-ce-0';
+			if($('#id_config').val()) {
+				id = $('#id_config').val();
+				url='##LBL_SITE_URL##index.php/page-setting-choice-edit_config-ce-0';
+			}
+			$.post(url,{"id_config":id, "sec[name]":name, "sec[ckey]":ckey,"sec[f_type]":field_type,"sec[f_key]":field_key,"sec[f_value]":field_value,"sec[value]":sec_value,"sec[comment]":comment,"sec[is_editable]":edit}, function(res){
+				//jqueryAlert(res);return;
+				if(res=='no'){
+					$("#id_err").show();
+					$('#id_key').val('');
+					$('#id_key').focus();
+				}else{
+					window.location.href=res;
+					//$("#addconfigform").reset();
+				}
+			});
+		}else{
+			return false;
+		}
+	}
+</script>
+{/literal}

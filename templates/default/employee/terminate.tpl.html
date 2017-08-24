@@ -1,0 +1,133 @@
+{assign var=terminate value=$util->get_values_from_config('TERMINATE_REASON')}
+{assign var=eligibility value=$util->get_values_from_config('ELIGIBILITY')}
+<div style="width:415px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:343px;">
+            Contract for <b>{$sm.emp_res.firstname} {$sm.emp_res.middlename} {$sm.emp_res.lastname}</b>
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+
+
+        <form id="terminate_form" name="terminate_form" method="post" action="javascript:void(0);">
+        <input type="hidden" name="id_terminate" value="{$sm.terminate_res.id_terminate}">
+        <table class="listing_tbl">
+            <tr>
+                <td align='right'><b>Termination date : </b></td>
+                <td>
+                    {if $sm.flag eq 'detail'}
+                        {$sm.terminate_res.terminate_date|date_format:'%d-%m-%Y'}
+                    {else}
+                    <input type="text" name="terminate_date" value="{$sm.terminate_res.terminate_date|date_format:'%d-%m-%Y'}" id="terminate_date" class="text"/>
+                    {/if}
+                </td>
+            </tr>
+            <tr>
+                <td align='right'><b>Reason : </b></td>
+                <td>
+                    {if $sm.flag eq 'detail'}
+                        {$terminate[$sm.terminate_res.reason]}
+                    {else}
+                    <select name="terminate[reason]" id="reason">
+                        <option value="">-- Select --</option>
+                        {html_options options=$terminate selected=$sm.terminate_res.reason}
+                    </select>
+                    {/if}
+                </td>
+            </tr>
+            <tr>
+                <td align='right'><b>Eligibility for rehire : </b></td>
+                <td>
+                    {if $sm.flag eq 'detail'}
+                        {$eligibility[$sm.terminate_res.eligibility]}
+                    {else}
+                    <select name="terminate[eligibility]" id="eligibility">
+                        <option value="">-- Select --</option>
+                        {html_options options=$eligibility selected=$sm.terminate_res.eligibility}
+                    </select>
+                    {/if}
+                </td>
+            </tr>
+            {if $sm.flag neq 'detail'}
+            <tr>
+            	<td></td>
+                <td>
+                    <input type="button" name="save_termination" value="Save" onclick="save();" class="login_btn">
+                </td>
+            </tr>
+            {/if}
+        </table>
+        </form>
+
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo('#terminate_form');
+$(document).ready(function(){
+	$('#terminate_date').datepicker({dateFormat:'dd-mm-yy',changeMonth:true,changeYear:true,yearRange:"-100:+0"});
+});
+function save(){
+	var res = terminateForm();
+	if(res){
+		cShowActivity('2');
+		var upd_id=$("#upd_id").val();
+		var data=$("#terminate_form").serialize();
+		var url="##LBL_SITE_URL##index.php/employee/updateTermination?"+data;
+		$.post(url,{ce:0,id_employee:upd_id},function (res){
+			$("#target").html($("#jmsg").val());
+			$("#leftpan").html(res);
+		});		
+		$.fancybox.close();
+		cHideActivity();
+	}else
+		return false;
+}
+function terminateForm(){		
+	var validator_terminate_form=$("#terminate_form").validate({
+		rules: {
+			"terminate_date": {
+				required:true
+			},
+			"terminate[reason]": {
+				required:true
+			},
+			"terminate[eligibility]": {
+				required:true
+			}
+		},
+		messages: {
+			"terminate_date":{
+				required:flexymsg.required
+			},
+			"terminate[reason]":{
+				required:flexymsg.required
+			},
+			"terminate[eligibility]":{
+				required:flexymsg.required
+			}
+		}
+	});
+	return validator_terminate_form.form();
+}
+</script>
+<style type="text/css">
+#terminate_form .text {
+	width:250px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#terminate_form select {
+	border:1px solid #ccc;
+	width:259px;	
+	padding:4px;
+}
+</style>
+{/literal}

@@ -1,0 +1,16 @@
+Dear admin,<br><br>
+	An employee has applied for leave. Details are given below: <br><br>
+	<b>Name:</b> {$smarty.session.fullname}<br>
+	<b>Team name:</b> {if $smarty.session.teamname}{$smarty.session.teamname}{else}NA{/if}<br>
+	<b>Department name:</b> {$smarty.session.departmentname}<br>
+	<b>Division name:</b> {$smarty.session.divname}<br>
+	<b>E-mail:</b> {$smarty.session.username}<br>
+	<b>From:</b> {$sm.from_date|date_format:"%d-%m-%Y"}<br>
+	<b>To:</b> {$sm.to_date|date_format:"%d-%m-%Y"}({$sm.work_days} Day(s))<br>
+	<b>Leave type:</b> {$leavetype[$sm.leave_type]|capitalize}<br>
+	<b>Notes:</b> {$sm.notes}<br><br>
+	
+Please go to Leave > Leave requests to accept or deny this request. <br><br>
+
+Regards,<br>
+Admin

@@ -1,0 +1,45 @@
+{assign var=emp_sts value=$util->get_values_from_config('EMPLOYMENT_STATUS')}
+{if $smarty.session.id_company}
+<table>
+	<tr>
+    		<td>			
+			<div id="leave_leaveRequest" class="mrgtp_16">{include file=leave/leaveRequestList}</div>
+		</td>
+	</tr>
+</table>
+{else}
+	<div id="leave_leaveRequest">{include file=leave/leaveRequestList}</div>
+{/if}
+{literal}
+<script type="text/javascript">
+	var f;
+	function searchLeaveRequest(f,msg,k,qs){
+		cShowActivity('1');
+		var url="##LBL_SITE_URL##index.php/page-leave-choice-leaveRequest";
+		// for filter on Leave status
+		var leavestatus='';
+		$('.leavestatus').each(function(){
+			if($(this).is(':checked'))
+				leavestatus+=","+$(this).val();
+		});
+		if(leavestatus == '')
+			leavestatus=",1";
+		if(qs===''){
+			var qs=$("#qstart").val();
+		}
+		$.post(url,{ce:0,chk:1,f:f,keys:k,msg:msg,qs:qs,leavestatus:leavestatus},function(res){
+			$("#leave_leaveRequest").html(res);
+			cHideActivity();
+		});
+	}
+	function searchEmployeeList(f,msg,k,qs){
+		$("#a_terminate").css("font-weight","bold");
+		cShowActivity('1');
+		var url="##LBL_SITE_URL##index.php/page-employee-choice-employeeList";
+		$.post(url,{ce:0,f:f,emp_status:"1",Tchk:1},function(res){
+			$("#container").html(res);
+			cHideActivity();
+		});
+	}
+</script>
+{/literal}

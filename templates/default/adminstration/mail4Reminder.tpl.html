@@ -1,0 +1,22 @@
+{if $reminders}
+{assign var=recursts value=$util->get_values_from_config('DURATION')}
+<h3>Dear Admin,</h3><br>
+<h3>These are the following reminders for {$smarty.now|date_format:"%d-%m-%Y"}</h3>
+<table cellspacing="10" cellpadding="5">
+	<tr>
+		<th align="left">Sl No.</th>
+		<th align="left">Reminder</th>
+		<th align="left">Reminder start time</th>
+		<th align="left">Frequency</th>
+	</tr>
+	{section name=cur loop=$reminders}
+	{assign var=x value=$reminders[cur]}
+	<tr>
+		<td>{$smarty.section.cur.iteration}</td>
+		<td>{$x.reminder}</td>
+		<td>{$x.reminder_date|date_format:"%d-%m-%Y %H:%M:%S"}</td>
+		<td>{$recursts[$x.recurrence_status]}</td>
+	</tr>
+	{/section}
+</table>
+{/if}

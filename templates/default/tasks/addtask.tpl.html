@@ -1,0 +1,121 @@
+<div style="width:405px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:333px;">
+         {if $sm.edit_task} Edit {else} Add {/if} Task </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+    <span id="tasks_msg" class="error"></span><br>
+    <form id="add_task" name="add_task" method="post" action="javascript:void(0);">
+        <table class="listing_tbl">
+        {if $sm.edit_task.id_tasks}
+		    		<input type="hidden" id="task[temp_id]" name="task[temp_id]" value="{$sm.edit_task.id_tasks}">
+		    	{/if}
+		    		<input type="hidden" id="task[date]" name="task[date]" value="{$sm.datesql}">
+       <tr>
+            <td align='right'><b>Task Date : </b></td>
+            <td>{$sm.date}</td>
+        </tr>
+          <tr>
+            <td align='right'><b>Task Name : </b></td>
+            <td><input type="text" name="task[name]" value="{$sm.edit_task.task_name}" class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Task Description : </b></td>
+            <td><textarea name="task[description]" class="textarea">{$sm.edit_task.task_description}</textarea></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_property" value="Save" onclick="save('{$sm.edit_task.id_tasks}');" class="login_btn">
+            </td>
+        </tr>
+    </table>
+    </form>
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#add_task");
+function save(id_tasks){
+	$("#tasks_msg").html("");
+	var res = assignTask();
+ if(res){
+		cShowActivity('2');
+		var data=$("#add_task").serialize();
+  		if(id_tasks!='')
+		{
+		var url="##LBL_SITE_URL##index.php/tasks/updateEmployeeTask?"+data;
+		}
+		else
+		{
+			var url="##LBL_SITE_URL##index.php/tasks/insertEmployeeTask?"+data;
+		}
+	//	alert(url);
+  $.post(url,{ce:0},function (res){
+  			$("#tasks_details").html(res);
+				$.fancybox.close();
+                cHideActivity();
+		});
+	}else
+		return false;
+}
+function assignTask(){
+	var validator_assign_task=$("#add_task").validate({
+		rules: {
+   			"task[name]": {
+				required:true
+			},
+			"task[description]": {
+				required:true
+			},
+		},
+		messages: {
+  			"task[name]":{
+				required:flexymsg.required
+			},
+			"task[description]":{
+				required:flexymsg.required
+			}
+		}
+	});
+	return validator_assign_task.form();
+}
+</script>
+<style type="text/css">
+#add_task .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#add_task select {
+	border:1px solid #ccc;
+	width:209px;
+	padding:4px;
+}
+#add_task .textarea {
+width:200px;
+height:90px;
+margin-right:10px;
+border:1px solid #ccc;
+}
+</style>
+{/literal}
+
+
+
+
+
+
+
+
+
+
+

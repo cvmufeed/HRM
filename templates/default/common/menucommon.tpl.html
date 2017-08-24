@@ -1,0 +1,21 @@
+<div  id="setting_userlist"> </div>
+                {if $smarty.session.id_company}    {literal}
+<script type="text/javascript">
+var url = "##LBL_SITE_URL##index.php/";
+$.post(url,{page:"setting",choice:"menu",ce:0},function(res){
+ 	$("#setting_userlist").html(res);
+	});
+</script>
+{/literal}
+{elseif $smarty.session.id_employee}
+{literal}
+<script type="text/javascript">
+var url = "##LBL_SITE_URL##index.php/";
+$.post(url,{page:"setting",choice:"menu",ce:0},function(res){
+ 	$("#setting_userlist").html(res);
+	});
+</script>
+{/literal}
+{/if}
+
+

@@ -1,0 +1,5 @@
+<?php /* Smarty version 2.6.7, created on 2017-08-24 10:54:38
+         compiled from report/home.tpl.html */ ?>
+<?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
+smarty_core_load_plugins(array('plugins' => array(array('function', 'get_mod', 'report/home.tpl.html', 2, false),)), $this); ?>
+<?php $this->_cache_serials['/home/mufeed/html/generatedata/simplehrm/flexycms/../var/localhost/templates_c/default/^%%78^78C^78C5353B%%home.tpl.html.inc'] = '2d29079b65856a502f99bfaa389329de';  if ($this->caching && !$this->_cache_including) { echo '{nocache:2d29079b65856a502f99bfaa389329de#0}';}echo $this->_plugins['function']['get_mod'][0][0]->get_mod(array('mod' => 'report','mgr' => 'report'), $this);if ($this->caching && !$this->_cache_including) { echo '{/nocache:2d29079b65856a502f99bfaa389329de#0}';}?>

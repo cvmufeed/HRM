@@ -1,0 +1,6 @@
+{* notag *}
+{foreach from=$sm.data key=key item=item}
+	<span class="fcolor">{$item}</span>|{$item}
+{foreachelse}
+	<span class="fcolor">No record</span>|No record
+{/foreach}

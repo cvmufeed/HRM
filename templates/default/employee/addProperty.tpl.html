@@ -1,0 +1,107 @@
+<div style="width:405px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:333px;">
+            Assign to <b>{$smarty.session.fullname}</b>
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+    <span id="property_msg" class="error"></span><br>
+    <form id="assign_property" name="assign_property" method="post" action="javascript:void(0);">
+    <input type="hidden" name="property[id_employee]" value="{$sm.id}">
+    <table class="listing_tbl">
+        <tr>
+            <td align='right'><b>Property Type : </b></td>
+            <td>
+                <select name="property[id_property_type]" id="id_property_type">
+                    <option value="">-- Select --</option>
+                    {html_options options=$sm.property_type selected=''}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td align='right'><b>Property Name : </b></td>
+            <td><input type="text" name="property[property_name]" class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Serial No. : </b></td>
+            <td><input type="text" name="property[serial_no]" class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Notes : </b></td>
+            <td><textarea name="property[notes]" class="text" rows="7"></textarea></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_property" value="Save" onclick="save();" class="login_btn">
+            </td>
+        </tr>
+    </table>
+    </form>
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#assign_property");
+function save(){
+	$("#property_msg").html("");
+	var res = assignProperty();
+	if(res){
+		cShowActivity('2');
+		var data=$("#assign_property").serialize();
+		var url="##LBL_SITE_URL##index.php/employee/insertProperty?"+data;
+		//alert(url);
+		$.post(url,{ce:0},function (res){
+			if(res=="1"){
+				$("#property_msg").html("Already there is a record under this property name and serial no.");
+			}else{
+				$("#employee_assignedProperty").html(res);
+				$.fancybox.close();
+				cHideActivity();
+			}
+		});
+	}else
+		return false;
+}
+function assignProperty(){		
+	var validator_assign_property=$("#assign_property").validate({
+		rules: {
+			"property[property_name]": {
+				required:true
+			},
+			"property[id_property_type]": {
+				required:true
+			}
+		},
+		messages: {
+			"property[property_name]":{
+				required:flexymsg.required
+			},
+			"property[id_property_type]":{
+				required:flexymsg.required
+			}
+		}
+	});
+	return validator_assign_property.form();
+}
+</script>
+<style type="text/css">
+#assign_property .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#assign_property select {
+	border:1px solid #ccc;
+	width:209px;	
+	padding:4px;
+}
+</style>
+{/literal}

@@ -1,0 +1,198 @@
+{literal}
+<script type="text/javascript">
+	function previewImage(){
+		var im=$('#image').val();
+		if(im){
+			cShowActivity('1');
+			var url="##LBL_SITE_URL##index.php/setting/previewImage/ce-0";
+			$.ajaxFileUpload({
+				url : url,
+				secureuri:false,
+				fileElementId:'image',
+				dataType: 'json',
+				complete: function (data, status){
+					var z = data.responseText;
+					$('#previewimg').val(z);
+					var img="<br><img src='##LBL_SITE_URL##preview/orig/"+z+"'>";
+					$('#prev_image').html(img);
+					cHideActivity('1');
+				}
+			});
+		}
+	}
+	function validateCompanyInfo() {
+		var validator=$("#comp_info").validate({
+			rules: {
+				"company[company_name]": {
+					required:true
+				},
+				"company[company_info]":{
+					required: true
+				},
+				"company[address]": {
+					required:true
+				},
+				"company[tax_id]": {
+					required:true
+				},
+				"company[twitter_id]": {
+					required:true
+				},
+				"company[facebook_id]": {
+					required:true
+				},
+				"company[linkedin_id]": {
+					required:true
+				},
+				"company[email_id]": {
+					required:true,
+					email:true
+				},
+				"company[timezone]":{
+					required:true
+				},
+				"company[currency]":{
+					required:true
+				},
+				"company[language]":{
+					required:true
+				}
+			},
+			messages: {
+				"company[company_name]": {
+					required:flexymsg.required
+				},
+				"company[company_info]": {
+					required:flexymsg.required
+				},
+				"company['address']": {
+					required:flexymsg.required
+				},
+				"company['tax_id']": {
+					required:flexymsg.required
+				},
+				"company['twitter_id']": {
+					required:flexymsg.required
+				},
+				"company['facebook_id']": {
+					required:flexymsg.required
+				},
+				"company[linkedin_id]": {
+					required:flexymsg.required
+				},
+				"company[email_id]": {
+					required:flexymsg.required,
+					email:flexymsg.email
+				},
+				"company[timezone]":{
+					required:flexymsg.required
+				},
+				"company[currency]":{
+					required:flexymsg.required
+				},
+				"company[language]":{
+					required:flexymsg.required
+				}
+			}
+		});
+		var x=validator.form();
+		if(x)
+			cShowActivity('1');
+		return x;
+	}
+</script>
+{/literal}
+<div class="cont">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+        <form action="##LBL_SITE_URL##index.php/setting/editCompanyInfo" enctype="multipart/form-data" id="comp_info" name="comp_info" method="post" onsubmit="return validateCompanyInfo();">
+        	<div class="cont_hdr1 fltlft">
+                    <div class="cont_hdr_lft fltlft"></div>
+                    <div class="cont_hdr_mdl1 fltlft">Edit company information</div>
+                    {assign var=company value=$sm.company_res}
+                    <div class="cont_hdr_rht fltlft"></div>
+                <div class="clrbth"></div>
+                    <table border="0" width="98%" class="listing_tbl">
+                        <tr>
+                            <td  width="20%" align="left">Company name: </td>
+                            <td><input name="company[company_name]" type="text" id="company_name" value="{$sm.res.company_name}"/></td>
+                        </tr>
+                        <tr>
+                            <td align="left">Company information: </td>
+                            <td><textarea name="company[company_info]" rows="3" cols="58">{$sm.res.company_info}</textarea></td>
+                        </tr>
+                        <tr>
+                            <td align="left">Company logo: </td>
+                            <td>
+                                <input name="image" id="image" type="file" onChange="previewImage();" />
+                                <span id="prev_image"><br/><img src='##LBL_SITE_URL##image/orig/companylogo/{$sm.res.id_company}_{$sm.res.logo}' /></span>
+                                <input type="hidden" id="previewimg" name="previewimg" value="" />
+                                <input type="hidden" id="hidimg" name="hidimg" value="{$sm.res.logo}" />
+                            </td>            
+                        </tr>		
+                        <tr>
+                            <td align="left">Address: </td>
+                            <td><textarea name="company[address]">{$sm.res.address}</textarea></td>
+                        </tr>
+                        <tr>
+                            <td align="left">Tax ID: </td>
+                            <td align="left">
+                                <input name="company[tax_id]" type="text" id="tax_id" value="{$sm.res.tax_id}" size="50" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Twitter ID: </td>
+                            <td align="left">
+                                <input name="company[twitter_id]" type="text" id="twitter_id" value="{$sm.res.twitter_id}" size="50" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Facebook page: </td>
+                            <td align="left">
+                                <input name="company[facebook_id]" type="text" id="facebook_id" value="{$sm.res.facebook_id}" size="50" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Linkedin ID: </td>
+                            <td align="left">
+                                <input name="company[linkedin_id]" type="text" id="linkedin_id" value="{$sm.res.linkedin_id}" size="50" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Company e-mail: </td>
+                            <td align="left">
+                                <input name="company[email_id]" type="text" id="email_id" value="{$sm.res.email_id}" size="50" disabled="true" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">HQ timezone: </td>
+                            <td align="left">
+                                <select name="company[timezone]" id="timezone">
+                                    <option value="">-- select timezone --</option>
+                                    {html_options options=$sm.timezone selected=$company.timezone}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Currency: </td>
+                            <td align="left">
+                                <select name="company[currency]" id="currency">
+                                    <option value="">-- Select Currency --</option>
+                                    {html_options options=$sm.currency selected=$company.currency}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>					
+                            <td>
+                                <input name="submit" type="submit" value="Save" class="login_btn">
+                                <input name="cancel" type="button" value="Cancel" onclick="cancelEdit();" class="login_btn">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="clrbth"></div>
+        </form>
+    </div>
+    <div class="cont_bg_btm"></div>
+</div>

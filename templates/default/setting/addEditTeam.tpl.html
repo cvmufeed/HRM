@@ -1,0 +1,121 @@
+<div style="width:400px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:328px;">
+            {if $sm.res_team}Edit{else}Add{/if} Team
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+        <form action="" enctype="multipart/form-data" id="teams" name="teams" method="post">
+      <input type="hidden" name="id_team" id="id_team" value="{$sm.res_team.id_team}" />
+      <table class="listing_tbl">
+      	<tr>
+		     <td align="right"><b>Division name: </b></td>
+		     <td>
+		     	{if $sm.res_team.id_division}
+		    		<input type="hidden" name="team[id_division]" value="{$sm.res_team.id_division}">
+		    	{/if}
+		     	<select name="team[id_division]" id="division_name" onchange="getdept_name();" {if $sm.res_team.id_division} disabled="disabed"{/if}>
+	     			<option value="">-- Select --</option>
+				{html_options options=$sm.div selected=$sm.res_team.id_division}
+			</select>
+		     </td>
+          </tr>
+          <tr>
+		     <td align="right"><b>Department name: </b></td>
+		     <td>
+		     	{if $sm.res_team.id_department}
+		    		<input type="hidden" name="team[id_department]" value="{$sm.res_team.id_department}">
+		    	{/if}
+		     	<select name="team[id_department]" id="department_name" {if $sm.res_team.id_department} disabled="disabed"{/if}>
+		     		<option value="">-- Select --</option>
+		     		{if $sm.res_team}
+					{html_options options=$sm.dept selected=$sm.res_team.id_department}
+				{/if}
+			</select>
+		     </td>
+          </tr>
+          <tr>
+		     <td align="right"><b>Team name: </b></td>
+		     <td><input name="team[team_name]" type="text" id="team_name" value="{$sm.res_team.team_name}"/></td>
+          </tr>
+          <tr>
+		     <td align="right"><b>Notes: </b></td>
+		     <td><textarea name="team[notes]" id="notes">{$sm.res_team.notes}</textarea></td>
+          </tr>
+          <tr>
+          	<td colspan="2" align="center">
+          		<input name="add" id="add" type="button" value="{if $sm.res_team}Update{else}Add{/if}" onclick="team_manupulation();" class="login_btn">
+          	</td>
+        </tr>	
+      </table>
+</form>
+    </div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#teams");
+function  validate_team_information() {
+	var validator=$("#teams").validate({
+			rules: {
+				"team[id_division]": {
+					required:true
+				},
+				"team[id_department]": {
+					required:true
+				},
+				"team[team_name]": {
+					required:true
+				}
+			},
+			messages: {
+				"team[id_division]": {
+					required:flexymsg.required
+				},
+				"team[id_department]": {
+					required:flexymsg.required
+				},
+				"team[team_name]": {
+					required:flexymsg.required
+				}
+			}
+		});
+		return validator.form();
+	}
+	function team_manupulation(){
+		if(validate_team_information()){
+			var url1=$('#teams').serialize();
+			var url2;
+			if($('#id_team').val()){
+				var qstart=$("#start").val();
+				var url2="##LBL_SITE_URL##index.php/setting/updateteam/ce-0-qstart-"+qstart+"-?";
+			}else{
+				var url2="##LBL_SITE_URL##index.php/setting/insertteam/ce-0-?";
+			}
+			var url=url2+url1;
+			cShowActivity('2');
+			$.post(url,function(res){
+				if(check_JSsession(res,0)) {
+					$('#setting_team').html(res);
+					$.fancybox.close();
+					cHideActivity();
+				}
+			});
+		}else{
+			return false;
+		}
+	}
+	function getdept_name(){
+		var id_div=$("#division_name").val();
+		var status=$('#status').val();
+		var url="##LBL_SITE_URL##index.php/setting/getdeptName/ce-0-?";
+		$.post(url,{id_division:id_div},function(res){
+			if(check_JSsession(res,0)) {
+				$('#department_name').html(res);
+			}
+		});
+	}
+</script>
+{/literal}

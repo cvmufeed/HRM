@@ -1,0 +1,73 @@
+<table border="0" width="70%">
+  <tr>
+    <td width="60%" align="center" id="file_list">
+    		{include file="file/list"}
+    </td>
+    <td valign="top">
+      <br><br>
+      <div style="margin-left:0px;">
+      	    {include file="file/upload"}
+      </div>
+    </td>
+  </tr>
+</table>
+{literal}  
+<script>
+function searchFile(msg){
+	var url="##LBL_SITE_URL##file/list";
+	cShowActivity('1');
+	var fid="{/literal}{$smarty.request.fid}{literal}";
+	$.post(url,{ce:0,fid:fid,chk:1},function (res){
+			$("#file_list").html(res);
+		cHideActivity();
+		if(msg!=""){
+			callmsg(msg)
+		}	
+	});
+}
+/*
+ * Function Name : addFF
+ * Purpose		 : To show add file or folder template
+ * Input		 : type(either file or folder),id_parent(Under which folder to add file or folder)
+ * Output		 : Show ajax post response
+ */
+function addEdit(flg,id_folder,id_parent){
+	var url="##LBL_SITE_URL##file/addFile";
+	cShowActivity('');
+	$.post(url,{id_parent:id_parent,id_folder:id_folder,flg:flg,ce:0},function (res){
+		if(check_JSsession(res,0)) {
+			show_fancybox(res);
+		}
+	});		
+}
+/*
+ * Function Name : deleteFF
+ * Purpose		 : To delete file or folder(if no other file or folder present under it)
+ * Input		 : idFF(file or folder primary key),file_name(name of file),id_folder(folder id 
+ * Output		 : Show ajax post response and redirect to listing page
+ */
+function deleteFF(typ,id,file_name,chc){
+	var fid="{/literal}{$smarty.request.fid}{literal}";
+	if(typ=='2'){
+		nm='category';
+	}else{
+		nm='file';
+	}
+	var qstart=$("#start").val();
+	var cnt=$("#cnt").val();
+	if(chc==''){
+		chc=jqueryConfirm("Are you sure you want to delete this "+nm+"?","deleteFF",typ,id,file_name);
+	}
+	if(chc){
+		var url="##LBL_SITE_URL##file/deleteFF";
+		cShowActivity('1');
+		$.post(url,{typ:typ,id:id,fid:fid,qstart:qstart,cnt:cnt,chk:1,file_name:file_name,ce:0},function (res){
+			if(check_JSsession(res,1)) {
+				$("#file_list").html(res);
+				cHideActivity();
+			}
+		});	
+	}
+}
+</script>
+{/literal}

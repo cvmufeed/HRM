@@ -1,0 +1,34 @@
+{* notag *}
+<div id="company_teamlisting">{include file=setting/teamlisting}</div>
+{literal}
+<script type="text/javascript">
+function remove_team(id,chc){
+	var url="##LBL_SITE_URL##index.php/setting/removeteam/ce-0";
+	if(chc==''){
+		chc=jqueryConfirm("Do you really want to delete this record?","remove_team",id);
+	}
+	var qstart=$("#start").val();
+	var cnt=$("#cnt").val();
+	if(chc){
+		cShowActivity('1');
+		$.post(url,{id_team:id,qstart:qstart,cnt:cnt},function(res){
+			if(check_JSsession(res,1)) {
+				cHideActivity();
+				$('#setting_team').html(res);
+			}
+		});
+	}else{
+		return false;
+	}
+}
+function addEditTeam(ch,id){
+	var url="##LBL_SITE_URL##index.php/setting/addEditTeam/ce-0";
+	cShowActivity('');
+	$.post(url,{ch:ch,id:id},function(res){
+		if(check_JSsession(res,0)) {
+			show_fancybox(res);
+		}
+	});
+}
+</script>
+{/literal}

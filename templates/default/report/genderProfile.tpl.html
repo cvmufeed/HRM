@@ -1,0 +1,124 @@
+{literal}
+<link rel="stylesheet" type="text/css" href="##LBL_SITE_URL##templates/css_theme/jquery.jqplot.css" />
+<!-- BEGIN: load jqplot -->
+<script language="javascript" type="text/javascript" src="##LBL_SITE_URL##templates/flexyjs/jquery.jqplot.js"></script>
+<script language="javascript" type="text/javascript" src="##LBL_SITE_URL##templates/flexyjs/jqplot.pieRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="##LBL_SITE_URL##templates/flexyjs/jqplot.categoryAxisRenderer.js"></script>
+<script language="javascript" type="text/javascript" src="##LBL_SITE_URL##templates/flexyjs/jqplot.barRenderer.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var male='{/literal}{$sm.male}{literal}';
+		var female='{/literal}{$sm.female}{literal}';
+		if(male || female)
+			pieGenderChart();
+		else
+			return true;
+	});
+
+	function pieGenderChart(){
+		$("#genderProfile").html('');
+		var male='{/literal}{$sm.male}{literal}';
+		var female='{/literal}{$sm.female}{literal}';
+		var gender = [['Male',+male], ['Female',+female]];
+		var genderPlot = $.jqplot('genderProfile', [gender], {
+			title:'Gender group pie chart',
+			grid: {
+			    drawBorder: true, 
+			    drawGridlines: true,
+			    background: '#ffffff',
+			    shadow:true
+			},
+			axesDefaults: {
+			    
+			},
+			seriesDefaults:{
+			    renderer:$.jqplot.PieRenderer,
+			    rendererOptions: {
+				showDataLabels: true
+			    }
+			},
+			legend: {
+			    show: true,
+			    rendererOptions: {
+				numberRows: 1
+			    },
+			    location: 's'
+			}
+		});
+		$("#genderBarPie").html('Click here for <a href="javascript:void(0);" onclick="barGenderChart()">Gender Bar Chart</a>');
+	}
+
+	function barGenderChart(){
+		$("#genderProfile").html('');
+		var male='{/literal}{$sm.male}{literal}';
+		var female='{/literal}{$sm.female}{literal}';
+		var gender = [['Male',+male], ['Female',+female]];		
+		 gender = $.jqplot('genderProfile', [gender], {
+		    title:'Gender group bar chart',
+		     seriesDefaults:{
+		       renderer:$.jqplot.BarRenderer, 
+		       rendererOptions:{
+		         barWidth:25, 
+		         barPadding:-15, 
+		         barMargin:15, 
+		         barDirection: 'vertical',
+		         varyBarColor: true
+		       }, 
+		       shadow:true
+		     },
+		     legend: {show:false},
+		     axes:{
+		         yaxis:{min:0, tickOptions: {formatString: '%.0f',showGridLine: true}},
+		         xaxis:{show: true, renderer: $.jqplot.CategoryAxisRenderer,
+		                    tickOptions: {show: true, showLabel: true},
+		                    showTicks: false}
+		         }
+		 });
+		$("#genderBarPie").html('Click here for <a href="javascript:void(0);" onclick="pieGenderChart()">Gender Pie Chart</a>');
+	}
+</script>
+{/literal}
+{if $sm.male || $sm.female}
+
+
+
+
+
+<table border="0">
+
+<tr>
+		<td valign="middle">
+			<div id="genderProfile" style="margin-top:20px; margin-left:20px; width:350px; height:350px; position:relative; z-index:0"></div>
+			<div id="genderBarPie" style="margin-left:20px;"></div>
+			</font>
+		</td>
+	</tr>
+		<tr>
+		<td align=center>
+			<font size='2'>
+
+        <div class="smlest_box">
+                <div class="top"></div>
+                <div class="mdl">
+                        <div class="clear"></div>
+                        <div class="a_cont wid84smlst">
+			<div id="genderProfileData">Number of male employees: <b>{$sm.male|default:0}</b><br/>Number of female employees: <b>{$sm.female|default:0}</b></div>
+
+                        </div>
+                </div>
+                <div class="btm"></div>
+        </div>
+
+
+
+
+
+
+		</td>
+  </tr>
+</table>
+{else}
+	<div>Employee not found</div>
+{/if}
+</div>

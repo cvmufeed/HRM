@@ -1,0 +1,33 @@
+<div style="margin-top:33px;">
+    <ul class="menu" id="menu">
+      {foreach $sm.sub as $main}
+      <li class="openul">
+                    <div class="fltlft lft_prt"></div>
+                    <div class="fltlft mdl_prt"><a class="menulink" href="javascript:void(0);">{$main.module_name}</a></div>
+                    <div class="fltlft rht_prt"></div>
+                    {if $main.id_modules == $sub_menu.id_modules}
+                   <ul>
+                        <li><a href="##LBL_SITE_URL##company/companyInfo">{$main.features_name}</a></li>
+
+                    </ul>
+                    {/if}
+                    {/foreach}
+                </li>
+                {/foreach}
+           </ul>
+<div class="clrbth"></div>
+</div>
+<div class="clrbth"></div>
+{literal}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('ul#menu li.openul').hover(function(){
+		//$(this).find('ul').show();
+		jQuery(this).find('> ul').stop(true, true).slideDown(300).css('width','150px');
+
+	},function(){
+		$(this).find('ul').slideUp(300);
+	});
+});
+</script>
+{/literal}

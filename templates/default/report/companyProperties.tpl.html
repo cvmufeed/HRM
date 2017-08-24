@@ -1,0 +1,107 @@
+{* notag *}
+{if defined($smarty.const.LINK_SEPARATOR)}
+	{assign var=sep value=$smarty.const.LINK_SEPARATOR}
+{else}
+	{assign var=sep value="-"}
+{/if}
+<div id="report_companyProperties">
+	<div class="cont">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+    	<div class="cont_hdr1 fltlft">
+            <div class="cont_hdr_lft fltlft"></div>
+            <div class="cont_hdr_mdl1 fltlft">
+                <div class="fltlft">
+                	 Company Properties List ({$sm.next_prev->total})
+                </div>
+                <div class="fltrht">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="cont_hdr_rht fltlft"></div>
+	        <div class="clrbth"></div>
+        </div>
+        <div class="clrbth"></div>
+        <div class="cont_txt">
+            	<div class="txtbg_top fltlft"></div>
+                <div class="txtbg_mdl fltlft">
+                    {if $sm.list}
+                    <table width="97%" cellpadding="0" cellspacing="0" border="0" align="center" class="tbl_listing" style="margin-bottom:25px;">
+                        <thead>
+                            <tr>
+                            {foreach from=$sm.field item=item key=key name=foric}
+                                {if $key == $smarty.session.$m.sort_by}
+                                {if $smarty.session.$m.sort_order=="ASC"}
+                                    {assign var=cls value="asc"}
+                                {else}
+                                    {assign var=cls value="desc"}
+                                {/if}
+                                {else}
+                                {assign var=cls value=""}
+                                {/if}
+                                <th class="email {if $smarty.foreach.foric.last}brdr_none{/if}">
+                                    {if $item.1!=0}
+                                    {if $sm.ajax}
+                                    <a href="javascript:get_next_page('##APP_ROOT_URL##{$sm.uri}{$sep}sort_by{$sep}{$key}',0,0,'{$smarty.request.page}_{$smarty.request.choice}')">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                    {else}
+                                    <a href="##APP_ROOT_URL##{$sm.uri}{$sep}sort_by{$sep}{$key}">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                    {/if}
+                                    {else}
+                                    {if $item!=""}{$item.0}{else}{$key}{/if}
+                                    {/if}
+                                </th>
+                                {/foreach}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">
+                                <td onclick="empDetail('{$x.id_employee}');" style="cursor:pointer;"><b>{$x.name}</b></td>
+                                <td>{$x.property_name}</td>
+                                <td>{$x.serial_no}</td>
+                                <td>{$x.notes}</td>
+                            </tr>
+                        {/section}
+                        </tbody>
+                    </table>
+                    <div>
+                        {if $sm.type=='advance'}
+                            <div class="pagination_adv">
+                            {$sm.next_prev->generateadv()}
+                            </div>
+                        {elseif $sm.type=='box'}
+                            <div class="pagination_box">
+                            <div align="center">{$sm.next_prev->generate()}</div>
+                            </div>
+                        {elseif $sm.type=='normal'}
+                            <div class="pagination">
+                            <div align="center">{$sm.next_prev->generate()}</div>
+                            </div>
+                        {elseif $sm.type=='nextprev'}
+                            <div class="pagination">
+                            <div align="center">{$sm.next_prev->onlynextprev()}</div>
+                            </div>
+                        {elseif $sm.type=='extra'}
+                            <div class="pagination_box">
+                            <div align="center">{$sm.next_prev->generateextra()}</div>
+                            </div>
+                        {else}
+                            {if $sm.type!='no'}
+                            <div>
+                                <div align="center">{$sm.next_prev->generate()}</div>
+                            </div>
+                            {/if}
+                        {/if}
+                    </div>
+                    {else}
+                        <div>Currently no properties found.</div>
+                    {/if}
+                </div>
+                <div class="txtbg_btm fltlft"></div>
+                <div class="clrbth"></div>
+        </div>
+    </div>
+    <div class="cont_bg_btm"></div>
+</div>
+</div>

@@ -1,0 +1,15 @@
+Dear {$sm.firstname} {if $sm.middlename} {$sm.middlename} {/if}{$sm.lastname},<p>
+
+Welcome to our company. <p>
+
+You have been added to our human resources database.  Your username is 
+<b>{$sm.username}</b> and password is <b>{$sm.password}</b><p>
+
+<a href="{$sm.activate_link}">Click here</a> to activate your account. If
+the above link does not work, you can copy and paste the link below into
+your web browser (please do not add extra spaces).
+<br /><br />
+<a href="{$sm.activate_link}">{$sm.activate_link}</a><p>
+
+Regards, <br>
+Admin

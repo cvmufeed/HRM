@@ -1,0 +1,75 @@
+<div style="width:375px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:303px;">
+            {if $sm.res_division}Edit{else}Add{/if} Division
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+        <form action="" enctype="multipart/form-data" id="division" name="division" method="post">
+        <input type="hidden" name="id_division" id="id_division" value="{$sm.res_division.id_division}" />
+        <table class="listing_tbl">
+            <tr>
+            <td width=25% <b>Division: </b></td>
+            <td width=75%><input name="division[div_name]" type="text" id="divsion_name" value="{$sm.res_division.div_name}"/></td>
+            </tr>
+            <tr>
+            <td align="right"><b>Notes: </b></td>
+            <td><textarea name="division[notes]"  id="notes" cols="23" rows="5">{$sm.res_division.notes}</textarea></td>
+            </tr>
+            <tr>
+            <td></td>
+            <td>
+                <input name="add" id="add" type="button" value="{if $sm.res_division}Update{else}Add{/if}" onclick="division_manupulation();" class="login_btn">
+            </td>
+          </tr>	
+        </table>
+        </form>
+    </div>
+</div>
+
+{literal}
+<script type="text/javascript">
+	forminfo("#division");
+	function  validate_division_information() {
+		var validator=$("#division").validate({
+			rules: {
+				"division[div_name]": {
+					required:true
+				}
+			},
+			messages: {
+				"division[div_name]": {
+					required:flexymsg.required
+				}
+			}
+		});
+		return validator.form();
+	}
+	function division_manupulation(){
+		if(validate_division_information()){
+			var url1=$('#division').serialize();
+			var url2;
+			if($('#id_division').val()){
+				var qstart=$("#start").val();
+				url2="##LBL_SITE_URL##index.php/setting/updatedivision/ce-0-qstart-"+qstart+"-?";
+			}else{
+				url2="##LBL_SITE_URL##index.php/setting/insertdivision/ce-0-?";
+			}
+			var url=url2+url1;
+			cShowActivity('2');
+			$.post(url,function(res){
+				if(check_JSsession(res,1)) {
+					$('#setting_divisions').html(res);
+					$.fancybox.close();
+					cHideActivity();
+				}
+			});
+		}else{
+			return false;
+		}
+	}
+</script>
+{/literal}

@@ -1,0 +1,176 @@
+{* notag *}
+{if defined($smarty.const.LINK_SEPARATOR)}
+	{assign var=sep value=$smarty.const.LINK_SEPARATOR}
+{else}
+	{assign var=sep value="-"}
+{/if}
+<div class="cont" id="adminstration_companyproperty">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+   	<div class="content">
+
+            <div style="margin-right:10px;">
+            <div class="cont_hdr1 fltlft" style="padding-left:10px;">
+                <div class="cont_hdr_lft fltlft"></div>
+                    <div class="cont_hdr_mdl1 fltlft" style="width:881px;">
+                 <div class="fltlft">
+                            Property list  ({$sm.next_prev->total})
+                        </div>
+
+
+                <div class="fltrht">{if $smarty.session.id_company}<input type="button" name="addproperty" value="Add" onclick="addproperty();" class="login_btn"/>{/if}</div>
+                <input type="hidden" name="start" id="start" value="{$sm.next_prev->start}" />
+                 <input type="hidden" name="cnt" id="cnt" value="{$sm.list|@count}" />
+                <div class="clear"></div>
+                </div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+
+<div class="cont_txt" style="margin-left:10px;">
+                        <div class="txtbg_top fltlft"></div>
+                        <div class="txtbg_mdl fltlft">
+
+
+                 {if $sm.list}<br />
+                <table class="tbl_listing mrgtp0">
+                         <thead>
+                            <tr>
+                                {foreach from=$sm.field item=item key=key name=foric}
+                                    {if $key == $smarty.session.$m.sort_by}
+                                    {if $smarty.session.$m.sort_order=="ASC"}
+                                        {assign var=cls value="asc"}
+                                    {else}
+                                        {assign var=cls value="desc"}
+                                    {/if}
+                                    {else}
+                                    {assign var=cls value=""}
+                                    {/if}
+
+                                    <th class="email">
+                                        {if $item.1!=0}
+                                        {if $sm.ajax}
+                                        <a href="javascript:get_next_page('##APP_ROOT_URL##{$sm.uri}/sort_by{$sep}{$key}',0,0,'{$smarty.request.page}_{$smarty.request.choice}')">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                        {else}
+                                        <a href="##APP_ROOT_URL##{$sm.uri}/sort_by{$sep}{$key}">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                        {/if}
+                                        {else}
+                                        {if $item!=""}{$item.0}{else}{$key}{/if}
+                                        {/if}
+                                    </th>
+                                 {/foreach}
+                                <th><b>Property Description.</b></th>
+                                {if $smarty.session.id_company}
+                                <th><b>Action</b></th>
+                                {/if}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">
+                            <td> {$x.type_name|capitalize:true|default:"NA"}</td>
+                            <td>{$x.type_description|default:"NA"}</td>
+                            {if $smarty.session.id_company}
+                            <td>
+                            <a href="javascript:void(0);" onclick="editproperty('edit','{$x.id_property_type}')">
+                                    <img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="" title="Edit"/></a>
+                                <img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="delete" title="Delete" onclick="return del('{$x.id_property_type}','');" style="cursor:pointer;">
+                            </td>
+                            {/if}
+                            </tr>
+                            {/section}
+                        </tbody>
+                     </table>
+                        <div>
+                                {if $sm.type=='advance'}
+                                <div class="pagination_adv">
+                                {$sm.next_prev->generateadv()}
+                                </div>
+                                {elseif $sm.type=='box'}
+                                <div class="pagination_box">
+                                <div align="center">{$sm.next_prev->generate()}</div>
+                                </div>
+                                {elseif $sm.type=='normal'}
+                                <div class="pagination">
+                                <div align="center">{$sm.next_prev->generate()}</div>
+                                </div>
+                                {elseif $sm.type=='nextprev'}
+                                <div class="pagination">
+                                <div align="center">{$sm.next_prev->onlynextprev()}</div>
+                                </div>
+                                {elseif $sm.type=='extra'}
+                                <div class="pagination_box">
+                                <div align="center">{$sm.next_prev->generateextra()}</div>
+                                </div>
+                                {else}
+                                {if $sm.type!='no'}
+                                <div>
+                                    <div align="center">{$sm.next_prev->generate()}</div>
+                                </div>
+                                {/if}
+                                {/if}
+                            </div>
+                {else}<br />
+                            <div align="center">There is no property type</div>
+                        {/if}
+
+
+                        </div>
+                        <div class="txtbg_btm fltlft"></div>
+                        <div class="clrbth"></div>
+</div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+	</div>
+    <div class="cont_bg_btm"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{literal}
+<script type="text/javascript">
+function addproperty(){
+	cShowActivity('');
+	//var id = $.trim($("#upd_id").val());
+	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"adminstration",choice:"addproperty",ce:0},function(res){
+		show_fancybox(res);
+	});
+}
+function editproperty(Edit,id_property){
+	cShowActivity('1');
+  	var url = "##LBL_SITE_URL##index.php/";
+ $.post(url,{page:"adminstration",choice:"editproperty",ce:0,id_property:id_property},function(res){
+		show_fancybox(res);
+	});
+}
+var id_modules;
+function del(id_property,chc){
+//alert("alert");
+	if(chc==''){
+		chc=jqueryConfirm("Do you really want to delete this record?","del",id_property);
+	}
+	if(chc){
+		cShowActivity('1');
+	}else{
+		return false;
+	}
+ 	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"adminstration",choice:"deleteproperty",ce:0,id_property:id_property},function(res){
+		$("#adminstration_companyproperty").html(res);
+		cHideActivity();
+	});
+}
+
+</script>
+{/literal}

@@ -1,0 +1,164 @@
+{* notag *}
+{if defined($smarty.const.LINK_SEPARATOR)}
+	{assign var=sep value=$smarty.const.LINK_SEPARATOR}
+{else}
+	{assign var=sep value="-"}
+{/if}
+<div id="adminstration_benefit_management">
+
+	<div class="cont">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+    	<div class="cont_hdr1 fltlft">
+            <div class="cont_hdr_lft fltlft"></div>
+            <div class="cont_hdr_mdl1 fltlft">
+                <div class="fltlft">
+                	 Benefit management ({$sm.next_prev->total})
+                </div>
+                <div class="fltrht">
+					
+                </div>
+                <div class="clear"></div>
+				<input type="hidden" name="start" id="start" value="{$sm.next_prev->start}" />
+            </div>
+            <div class="cont_hdr_rht fltlft"></div>
+	        <div class="clrbth"></div>
+        </div>
+        <div class="clrbth"></div>
+        <div class="cont_txt">
+            	<div class="txtbg_top fltlft"></div>
+                <div class="txtbg_mdl fltlft">
+
+
+                    <form method="post" action="##LBL_SITE_URL##index.php/adminstration/addBenefit/ce-0" id="benefit"  name="benefit" onsubmit="return validate_benefit();">
+                                <!--<input type="hidden" id="qstart" {if $sm.qstart} value="{$sm.qstart}"{else} value="1"{/if}/>-->
+                                <input type="hidden" id="qstart" name="qstart" value="{$sm.next_prev->start}"/>
+                                <input type="hidden" name="cnt" id="cnt" value="{$sm.list|@count}" />
+                                <div align="center">
+                                    Benefit name:&nbsp;<input type="text" id="benefit_name" name="benefit_name" autocomplete="off">&nbsp;<input type="submit" value="Add" id="sub1" class="login_btn_sml"><input type="button" id="cancl" value="Cancel" style="display:none" onclick="cancel();" class="login_btn_sml"><label class="error" generated="true" for="benefit_name"></label><br>	
+                                </div>
+                                <input type="hidden" id="temp_id1" name="temp_id1">
+                                {if $sm.list}			
+                                <table width="97%" cellpadding="0" cellspacing="0" border="0" align="center" class="tbl_listing" style="margin-bottom:25px;">
+                                <thead>
+                                <tr>
+                                    <th class="email" width="40%">Benefit name</th>
+                                    <th class="email" width="30%">Number of employees</th>
+                                    <th class="email" width="15%">Edit</th>
+                                    <th class="email brdr_none">Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {section name=cur loop=$sm.list}
+                                {assign var=x value=$sm.list[cur]}
+                                {assign var=y value=$x.id_benefits}
+                                <tr class="{cycle values="even,odd"}">
+                                <td>{$x.benefit_name}</td>
+                                <td>{if !$sm.cnt_res[$x.id_benefits]}0{else}{$sm.cnt_res[$x.id_benefits]}{/if}</td>
+                                <td><a href="javascript:void(0);" onclick="editbenefit('{$x.id_benefits}','{$x.benefit_name|escape:'quotes'}');"><img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="edit" title="Edit"/></a></td>
+                                <td>{if !$sm.cnt_res.$y.cnt}<a href="javascript:void(0);" onclick="return delbenefit('{$x.id_benefits}','');"><img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="delete" title="Delete"/></a>{/if}</td>
+                                </tr>
+                                {/section}
+                                </tbody>
+                                </table>
+                                {if $sm.type=='advance'}
+                                    <div class="pagination_adv">
+                                        {$sm.next_prev->generateadv()}
+                                    </div>
+                                {elseif $sm.type=='box'}
+                                    <div class="pagination_box">
+                                        <div align="center">{$sm.next_prev->generate()}</div>
+                                    </div>
+                                {elseif $sm.type=='normal'}
+                                    <div class="pagination">
+                                        <div align="center">{$sm.next_prev->generate()}</div>
+                                    </div>
+                                {elseif $sm.type=='nextprev'}
+                                    <div class="pagination">
+                                        <div align="center">{$sm.next_prev->onlynextprev()}</div>
+                                    </div>
+                                {elseif $sm.type=='extra'}
+                                    <div class="pagination_box">
+                                        <div align="center">{$sm.next_prev->generateextra()}</div>
+                                    </div>
+                                {else}
+                                    {if $sm.type!='no'}
+                                        <div>
+                                            <div align="center">{$sm.next_prev->generate()}</div>
+                                        </div>
+                                    {/if}
+                                {/if}
+                                {else}
+                                    No records found.
+                                {/if}
+                            </form>
+
+
+
+                </div>
+                <div class="txtbg_btm fltlft"></div>
+                <div class="clrbth"></div>
+        </div>
+    </div>
+    <div class="cont_bg_btm"></div>
+</div>
+</div>
+{literal}
+<script type="text/javascript">
+$("#s_benefit_name").autocomplete('##LBL_SITE_URL##index.php/adminstration/autoBenefitName/ce-0-for-norauto', {autoPrefill: false});
+$("#s_benefit_name").result(function(event, data, formatted) {
+	if(data) {
+		$('#s_benefit_name').val(data[1]);
+ 	}
+});		
+function validate_benefit() {
+	var validator=$("#benefit").validate({
+			rules: {
+				"benefit_name": {
+					required:true
+				}
+			},
+			messages: {
+				"benefit_name":{
+					required:flexymsg.required
+				}
+			}
+		});
+		var x=validator.form();
+		if(x)
+		     cShowActivity('1');
+		return x;     
+}
+function editbenefit(id,val){
+	$(".error").html('');
+	$("#temp_id1").val(id);
+	$('#cancl').show();
+	$("#benefit_name").val(val);
+	$("#sub1").val('Update');
+	$("#benefit").attr("action","##LBL_SITE_URL##index.php/adminstration/updateBenefit/ce-0");
+}
+function delbenefit(id,chc){
+	 var url="##LBL_SITE_URL##index.php/adminstration/deleteBenefit";
+	 var qstart=$("#qstart").val();
+	 var cnt=$("#cnt").val();
+	 if(chc==''){
+		chc=jqueryConfirm("Do you really want to delete this record?","delbenefit",id);
+	}
+	 if(chc){
+		cShowActivity('1');
+		 $.post(url,{ce:0,id:id,chk:1,qstart:qstart,cnt:cnt},function(res){
+			$('#adminstration_benefitManagement').html(res);
+			cHideActivity();
+		 });
+	 }else
+	 	return false;
+}
+function cancel(){
+	$(".error").html('');
+	$("#benefit_name").val('');
+	$('#cancl').hide();
+	$("#sub1").val('Add');
+	$("#benefit").attr("action","##LBL_SITE_URL##index.php/adminstration/addBenefit/ce-0");
+}
+</script>
+{/literal}

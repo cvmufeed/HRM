@@ -1,0 +1,157 @@
+<div style="width:405px;height:300px" id="setting_userslist">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:333px;">
+         {if $sm.users_edit} Edit {else} Add {/if} Users  </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+    <span id="users_msg" class="error"></span><br>
+    <form id="add_users" name="add_users" method="post" action="javascript:void(0);">
+        <table class="listing_tbl">
+        {if $sm.users_edit.id_userdetails}
+		    		<input type="hidden" id="users[temp_id]" name="users[temp_id]" value="{$sm.users_edit.id_userdetails}">
+		    	{/if}
+		<tr>
+            <td align='right'><b>Display Name: </b></td>
+            <td><input type="text" name="users[display_name]" value="{$sm.users_edit.displayname}" class="text"></td>
+        </tr>
+          <tr>
+            <td align='right'><b>User Name: </b></td>
+            <td><input type="text" name="users[user_name]" value="{$sm.users_edit.email_id}" class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Password: </b></td>
+            <td><input type="password" name="users[user_pwd]" value="" class="password"></td>
+        </tr>
+        <tr>
+        <td align='right'><b>Role Name : </b></td>
+        <td>
+          <select  name="users[user_role]" id="users[user_role]">
+        <option value="">-- Select --</option>
+    {section name=cur loop=$sm.roles}
+    {assign var=x value=$sm.roles[cur]}
+     <option value="{$x.id_roles}" {if $sm.users_edit.role eq $x.id_roles} selected {/if} > {$x.role_name}</option>
+         {/section}
+          </select>
+            </td>
+            </tr>
+          <tr>
+
+            <td align='right'><b>Is Active: </b></td>
+            {if $sm.users_edit.isactive}
+            <td><input type="checkbox"  name="users[isactive]" value="1" checked="checked"></td>
+              {else}
+            <td><input type="checkbox" name="users[isactive]" {if checked} value="1" {else} value="0" {/if}></td>
+            {/if}
+        </tr>
+         <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_property" value="Save" onclick="save('{$sm.users_edit.id_admin}');" class="login_btn">
+            </td>
+            </tr>
+    </table>
+    </form>
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#add_users");
+function save(id_users){
+	$("#users_msg").html("");
+	var res = addUsers();
+     if(res){
+		cShowActivity('2');
+		var data=$("#add_users").serialize();
+  		if(id_users!='')
+		{
+		var url="##LBL_SITE_URL##index.php/setting/updateusers?"+data;
+	//	alert(url);
+		}
+		else
+		{
+			var url="##LBL_SITE_URL##index.php/setting/insertusers?"+data;
+		}
+  $.post(url,{ce:0},function (res){
+  			$("#setting_userslist").html(res);
+				$.fancybox.close();
+                cHideActivity();
+		});
+	}else
+		return false;
+}
+function addUsers(){
+	var validator_users=$("#add_users").validate({
+		rules: {
+	    	"users[display_name]": {
+				required:true
+			},
+			"users[user_name]": {
+				required:true,
+                email:true
+			},
+			"users[user_pwd]": {
+				required:true
+
+			},
+			"users[user_role]": {
+				required:true
+
+			}
+
+		},
+		messages: {
+	    	"users[display_name]":{
+			required:flexymsg.required,
+			},
+			"users[user_name]":{
+			required:flexymsg.required,
+			email:'Please enter a valid email address.'
+			},
+            "users[user_pwd]": {
+				required:flexymsg.required,
+            },
+            "users[user_role]": {
+    required:flexymsg.required,
+
+			}
+		}
+	});
+	return validator_users.form();
+}
+</script>
+<style type="text/css">
+#add_users .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#add_users select {
+	border:1px solid #ccc;
+	width:209px;
+	padding:4px;
+}
+#add_users .password {
+	border:1px solid #ccc;
+	width:199px;
+ padding:4px;
+}
+</style>
+{/literal}
+
+
+
+
+
+
+
+
+
+
+

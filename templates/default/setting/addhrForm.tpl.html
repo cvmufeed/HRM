@@ -1,0 +1,79 @@
+<div style="width:400px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:328px;">
+            Add form
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+<form action="##LBL_SITE_URL##index.php/setting/{if $sm.res_hrform}updateHrform{else}insertHrform{/if}" enctype="multipart/form-data" id="hrform" name="hrform" method="post">
+<input type="hidden" name="id_hr_form" id="id_hr_form" value="{$sm.res_hrform.id_hr_form}" />
+<input type="hidden" name="fl_nm" id="fl_nm" value="{$sm.res_hrform.file_name}" />
+<input type="hidden" name="flnm" id="flnm" value="{$sm.res_hrform.file_name}" />
+<input type="hidden" name="qstart" id="qstart" value="{$sm.next_prev->start|default:0}" />
+<table align="center" border="0">
+    <tr>
+	    <td align="right"><b>Form name: </b></td>
+	    <td>
+	    	<input name="hrform[form_name]" type="text" id="form_name" value="{$sm.res_hrform.form_name}"/>
+	    </td>
+    </tr>
+    <tr>
+	    <td align="right"><b>File: </b></td>
+	    <td>
+	    	<input type="file" name="fname" onchange="put_filename();">
+	    	<label class="error" generated="true" for="flnm" id='file_msg'></label>
+	    	<br>{if $sm.res_hrform.form_name}{$sm.res_hrform.file_name}{/if}
+    	    </td>
+    </tr>
+    <tr>
+    	<td></td>
+    <td>
+    	<input name="add" id="add" type="submit" value="{if $sm.res_hrform}Update{else}Add{/if}" onclick="return validate_hrform_manupulation();" class="login_btn">
+    </td>
+  </tr>	
+</table>
+</form>
+    </div>
+</div>
+<h2 align="center"></h2>
+
+{literal}
+<script type="text/javascript">
+	forminfo("#hrform");
+	$(document).ready(function(){
+		$("#qstart").val($("#start").val());
+	});
+	function  validate_hrform_manupulation() {
+		var validator=$("#hrform").validate({
+			rules: {
+				"hrform[form_name]": {
+					required:true
+				},
+				"flnm": {
+					required:true
+				}
+			},
+			messages: {
+				"hrform[form_name]": {
+					required:flexymsg.required
+				},
+				"flnm": {
+					required:flexymsg.required
+				}
+			}
+		});
+		var x=validator.form();
+		if(x)
+			cShowActivity('2');
+		return x;
+	}
+	function put_filename(){
+		$("#flnm").val('insert');
+		$("#file_msg").html('');
+	}
+</script>
+{/literal}

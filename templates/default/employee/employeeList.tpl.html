@@ -1,0 +1,231 @@
+{assign var=emp_sts value=$util->get_values_from_config('EMPLOYMENT_STATUS')}
+{assign var=m value=$sm.next_prev->module}
+{if defined($smarty.const.LINK_SEPARATOR)}
+	{assign var=sep value=$smarty.const.LINK_SEPARATOR}
+{else}
+	{assign var=sep value="-"}
+{/if}
+<input type="hidden" name="qstart" value="{$sm.next_prev->start}" id="qstart">
+<input type="hidden" name="rshow" value="{$sm.show}" id="rshow">
+<input type="hidden" name="rtot" value="{$sm.next_prev->total}" id="rtot">
+<div class="sml_box">
+    <div class="top"></div>
+    <div class="mdl">
+    	<div class="cont_hdr1 fltlft">
+            <div class="cont_hdr_lft fltlft"></div>
+            <div class="cont_hdr_mdl1 fltlft">
+                <div class="fltlft">
+                	{if $smarty.session.auto eq 1}Terminated {/if}Employees list ({$sm.next_prev->total})
+                </div>
+                <div class="fltrht">
+                  {if $smarty.session.auto neq 1}
+                      <input type="button" name="addEmpl" value="Add" onclick="addEmployee();" class="fltrht" />
+                  {/if}
+                  {if $sm.list}
+                     <input type="button" name="delEmpl" value="Delete" onclick="deleteAll('chkbox_emp','');" class="fltrht"/>
+                 {/if}
+                </div>
+                <div class="clear"></div>
+            </div>
+              <input type="hidden" name="start" id="start" value="{$sm.next_prev->start}" />
+              <input type="hidden" name="cnt" id="cnt" value="{$sm.list|@count}" />
+              <input type="hidden" name="idprnt" id="idprnt" value="{$sm.idparent}" />
+            <div class="cont_hdr_rht fltlft">
+            </div>
+        </div>
+        <div class="clrbth"></div>
+        <div style="margin-left:20px">
+            	<div class="txtbg_top_sml fltlft"></div>
+                <div class="txtbg_mdl_sml fltlft">
+                	<table class="listing_tbl">
+                            <tr>
+                                <td width="20%">Employee name: </td>
+                                <td width="80%"><input type="text" name="employee_name" id="employee_name" autocomplete="off" value=""/><input type="button" name="search" id="search"  value="Search" onclick="searchEmployeeList('','','','0');" class="login_btn"/></td>
+                            </tr>
+                        </table>
+                	{if $sm.list}
+                        <table width="97%" cellpadding="0" cellspacing="0" border="0" align="center" class="tbl_listing" style="margin-bottom:25px;">
+                            <tr>
+                                <th class="user">
+                                    {if $sm.list}
+                                    <input type="checkbox" name="chk_all" id="chk_all" onclick="checkUncheck('chkbox_emp');" title="Check to select all employee">
+                                    {/if}
+                                </th>
+                                <th class="email">Picture
+                                {foreach from=$sm.field item=item key=key name=foric}
+                                    {if $smarty.session.user_type eq 99 || $item.0 neq Id}
+                                            {if $key == $smarty.session.$m.sort_by}
+                                                {if $smarty.session.$m.sort_order=="ASC"}
+                                                    {assign var=cls value="asc"}
+                                                {else}
+                                                    {assign var=cls value="desc"}
+                                                {/if}
+                                            {else}
+                                                {assign var=cls value=""}
+                                            {/if}
+                                            <th class="email {$cls}" title="Click on {$item.0} to sort" {if $smarty.foreach.foric.last}style='border-right:none'{/if}>
+                                                {if $item.1!=0}
+                                                    {if $sm.ajax}
+                                                        <a href="javascript:get_next_page('##APP_ROOT_URL##{$sm.uri}{$sep}sort_by{$sep}{$key}',0,0,'{$smarty.request.page}_{$smarty.request.choice}')" class="tab_lable">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                                    {else}
+                                                        <a href="##APP_ROOT_URL##{$sm.uri}{$sep}sort_by{$sep}{$key}"><b>{if $item!=""}{$item.0}{else}{$key}{/if}</b></a>
+                                                    {/if}
+                                                {else}
+                                                    <b>{if $item!=""}{$item.0}{else}{$key}{/if}</b>
+                                                {/if}
+                                            </th>
+                                    {/if}
+                                {/foreach}
+                                </th>
+                            </tr>
+                            {section name=cur loop=$sm.list}
+                            {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}" height="70">
+                                <td><input type="checkbox" name="chk_box" id="chk{$x.id_employee}" value="{$x.id_employee}" class="chkbox_emp"></td>
+                                <td onclick="empDetail('{$x.id_employee}');" style="cursor:pointer;">
+                                    {if $x.avatar eq ''}
+                                        <img src="##LBL_SITE_URL##templates/css_theme/img/avatar/search/hrm_{if $x.gender eq M}male.jpg{else}female.jpg{/if}" title="Profile Pic">
+                                    {else}
+                                        <img src="##LBL_SITE_URL##image/thumb4_search/avatar/{$x.id_employee}_{$x.avatar}" title="Profile Pic">
+                                    {/if}
+                                 </td>
+                                 <td onclick="empDetail('{$x.id_employee}');" style="cursor:pointer;" title="See details of {$x.name}" align="left"><b>{$x.name}</b></td>
+                                 <td>{$x.job_title_name|capitalize:true|default:"NA"}</td>
+                                 <td>{if $x.joined_date eq '0000-00-00'}NA{else}{$x.joined_date|date_format:"%d-%m-%Y"}{/if}</td>
+                                 <td>{$x.work_email|default:"NA"}</td>
+                                 <td>{$x.work_phone|default:"NA"}</td>
+                                 <td>
+                                    {if $sm.res_terminate[$x.id_employee]}
+                                        <a style="cursor:pointer;" onclick="showTerminateReason('{$x.id_employee}');" title="See Details">{$emp_sts.2}</a>
+                                    {else}
+                                        {$emp_sts[$x.emp_status]}
+                                    {/if}
+                                </td>
+                            </tr>
+                           {/section} 
+                        </table>
+                        {if $sm.type=='advance'}
+                            <div class="pagination_adv">
+                                {$sm.next_prev->generateadv()}
+                            </div>
+                        {elseif $sm.type=='box'}
+                            <div class="pagination_box">
+                                <div align="center">{$sm.next_prev->generate()}</div>
+                            </div>
+                        {elseif $sm.type=='normal'}
+                            <div class="pagination">
+                                <div align="center">{$sm.next_prev->generate()}</div>
+                            </div>
+                        {elseif $sm.type=='nextprev'}
+                            <div class="pagination">
+                                <div align="center">{$sm.next_prev->onlynextprev()}</div>
+                            </div>
+                        {elseif $sm.type=='extra'}
+                            <div class="pagination_box">
+                                <div align="center">{$sm.next_prev->generateextra()}</div>
+                            </div>
+                        {else}
+                            {if $sm.type!='no'}
+                                <div>
+                                    <div align="center">{$sm.next_prev->generate()}</div>
+                                </div>
+                            {/if}
+                        {/if}
+                    {else}
+                    	<br><div align="center">No employees found.</div><br>
+                    {/if}
+                </div>
+                <div class="txtbg_btm_sml fltlft"></div>
+                <div class="clrbth"></div>
+        </div>
+    </div>
+    <div class="btm"></div>
+</div>
+{literal}
+<script type="text/javascript">
+	var msg = '{/literal}{$smarty.session.amsg}{literal}';
+	callmsg(msg);
+	$(document).ready(function(){
+		$('#employee_name').focus(function(){
+			var emp_ser=$('#employee_name').val();
+			if(emp_ser=='Search'){
+				$(this).val("");
+			 }
+		 }).blur(function(){
+			var emp_ser=$('#employee_name').val();
+			if(emp_ser==''){
+				$(this).val("");
+			 }
+	 	});
+		//For Autocomplete
+	    	$("#employee_name").autocomplete('##LBL_SITE_URL##index.php/employee/autoEmployeeName/ce-0-for-auto', {scrollHeight: 380,autoPrefill: false,scroll:true});		
+		$("#employee_name").result(function(event, data, formatted) {
+			cShowActivity('');
+			if(data) {
+				var empId = data[1].split("::");
+   				if(check_JSsession(empId[1],1)) {
+					$('#employee_name').val(empId[1]);
+					if(empId[1]!="No record"){
+						cHideActivity();
+						window.location.href="##LBL_SITE_URL##index.php/employee/employeeDetail/id-"+empId[0];
+					}
+				}				
+		 	}
+	 	});
+	});
+	function addEmployee(){
+		cShowActivity('');
+		var url = '##LBL_SITE_URL##index.php/';
+		$.post(url,{page:'employee',choice:'addEmployee',ce:0},function(res){
+			if(check_JSsession(res,1)) {
+				show_fancybox(res);
+			}
+		});
+	}
+	function checkUncheck(cls){
+		if(document.getElementById("chk_all").checked==true){
+			$('.'+cls).each(function(){	$(this).attr('checked','checked');  });
+		}else{
+			$('.'+cls).each(function(){	$(this).removeAttr('checked');	 });
+		}
+	}
+	function deleteAll(cls,chc) {
+		var keys='';
+		var i=0;
+		$('.'+cls).each(function(){
+			if($(this).is(':checked')){
+				keys +=","+$(this).val();
+				i++;
+			}
+		});
+		keys=keys.substr(1);
+		var rshoid='rshow';
+		var rshow = parseInt($("#"+rshoid).val());
+		var rtot = parseInt($("#rtot").val()) - i;
+		var qstrt = parseInt($.trim($("#qstart").val()));
+		var qs = (rtot%rshow)!=0 || (qstrt!=rtot) || (qstrt==0 && rtot==0) ? '' : Math.floor((rtot-1)/rshow)*rshow;
+		if(!keys){
+			jqueryAlert("Select at least one employee.");
+			return false;
+		}else{
+			if(chc==''){
+				chc=jqueryConfirm("Are you sure want to delete selected employee(s) ?","deleteAll",cls);
+			}
+			if(chc){	
+					searchEmployeeList('for_del','',keys,qs);
+					return true;
+			}else{
+					return false;
+			}
+		}
+		
+	}
+	function showTerminateReason(id){
+		cShowActivity('');
+		var url = '##LBL_SITE_URL##index.php/';
+		$.post(url,{page:'employee',choice:'terminateEmp',ce:0,id:id,flag:'detail'},function(res){
+			show_fancybox(res);
+		});
+	}
+</script>
+{/literal}

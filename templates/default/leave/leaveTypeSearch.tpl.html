@@ -1,0 +1,31 @@
+<table border="0">
+	<tr>
+		<td colspan="3" align="center" height="30">
+			<b>Leave type name: </b>
+			<input type="text" name="leave_type_name" id="leave_type_name" autocomplete="off" value=""/>
+			<input type="button" name="search" id="search"  value="Search" onclick="searchLeaveType('','','','0');"/>
+		</td>
+	</tr>
+	<tr>
+		<td width="80%">
+			<div id="leave_leaveTypes">{include file=leave/leaveType}</div>
+		</td>
+	</tr>
+</table>
+{literal}
+<script type="text/javascript">
+	function searchLeaveType(f,msg,k,qs){
+		cShowActivity('1');
+		$("#target").html('');
+		var url="##LBL_SITE_URL##index.php/page-leave-choice-leaveTypes";
+		if(qs===''){
+			var qs=$("#qstart").val();
+		}
+		var leave_type_name=$("#leave_type_name").val();
+		$.post(url,{ce:0,chk:1,qs:qs,leave_type_name:leave_type_name},function(res){
+			$("#leave_leaveTypes").html(res);
+			cHideActivity();
+		});
+	}
+</script>
+{/literal}

@@ -1,0 +1,112 @@
+<div style="width:405px;" id="adminstration_addproperty">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:333px;">
+         {if $sm.property_edit} Edit {else} Add {/if} Property  </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+    <span id="property_msg" class="error"></span><br>
+    <form id="add_property" name="add_property" method="post" action="javascript:void(0);">
+        <table class="listing_tbl">
+
+        {if $sm.property_edit.id_property_type}
+		    		<input type="hidden" id="property[temp_id]" name="property[temp_id]" value="{$sm.property_edit.id_property_type}">
+		    	{/if}
+
+            <td align='right'><b>Property Type: </b></td>
+            <td><input type="text" name="property[type_name]" value="{$sm.property_edit.type_name}"class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Property Description: </b></td>
+            <td><input type="text" name="property[type_description]" value="{$sm.property_edit.type_description}" class="text"></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_property" value="Save" onclick="save('{$sm.property_edit.id_property_type}');" class="login_btn">
+            </td>
+        </tr>
+    </table>
+    </form>
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#add_property");
+function save(id_property){
+
+	$("#property_msg").html("");
+	var res = addProperty();
+ if(res){
+		cShowActivity('2');
+		var data=$("#add_property").serialize();
+  		if(id_property!='')
+		{
+		var url="##LBL_SITE_URL##index.php/adminstration/updateproperty?"+data;
+		}
+		else
+		{
+			var url="##LBL_SITE_URL##index.php/adminstration/insertproperty?"+data;
+		}
+	//	alert(url);
+  $.post(url,{ce:0},function (res){
+  			$("#adminstration_companyproperty").html(res);
+				$.fancybox.close();
+                cHideActivity();
+		});
+	}else
+		return false;
+}
+function addProperty(){
+	var validator_property=$("#add_property").validate({
+		rules: {
+			"property[type_name]": {
+				required:true
+			},
+			"property[type_description]": {
+				required:true
+			}
+		},
+		messages: {
+			"property[type_name]":{
+				required:flexymsg.required
+			},
+			"property[type_description]":{
+				required:flexymsg.required
+			}
+		}
+	});
+	return validator_property.form();
+}
+</script>
+<style type="text/css">
+#add_property .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#add_property select {
+	border:1px solid #ccc;
+	width:209px;
+	padding:4px;
+}
+</style>
+{/literal}
+
+
+
+
+
+
+
+
+
+
+

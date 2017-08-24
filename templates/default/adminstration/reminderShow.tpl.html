@@ -1,0 +1,47 @@
+<div class="latest">
+    {if $sm.res_emp}<div><b>Upcoming Birthdays</b></div>{/if}
+    <div class="mrgn_lft">
+	{section name=s1 loop=$sm.res_emp}
+	{assign var=x value=$sm.res_emp[s1]}
+		<p>{$x.name} ({$x.dob|date_format:"%d %B"})</p>
+	{/section}
+    </div>
+</div>
+<div class="latest">
+	{if $sm.res_leave}<div><b>Leave request from</b></div>{/if}
+    <div class="mrgn_lft">
+	{section name=s1 loop=$sm.res_leave}
+	{assign var=l value=$sm.res_leave[s1]}
+		<p>{$l.name}</p>
+	{/section}
+    </div>
+</div>
+<div class="latest">
+	{if $sm.res_travel}<div><b>Travel request from</b></div>{/if}
+    <div class="mrgn_lft">
+	{section name=s1 loop=$sm.res_travel}
+	{assign var=l value=$sm.res_travel[s1]}
+		<p>{$l.name}</p>
+	{/section}
+    </div>
+</div>
+<div class="latest">
+	{if $sm.res_expense}<div><b>Expense request from</b></div>{/if}
+    <div class="mrgn_lft">
+	{section name=ex1 loop=$sm.res_expense}
+	{assign var=l value=$sm.res_expense[ex1]}
+		<p>{$l.name}</p>
+	{/section}
+    </div>
+</div>
+<div class="latest">
+	{if $sm.res_leave}<div><b>Reminders</b></div>{/if}
+    <div class="mrgn_lft">
+	{section name=s1 loop=$sm.res_rem}
+	{assign var=y value=$sm.res_rem[s1]}
+		<p>{$y.reminder}</p>
+	{sectionelse}
+		<p>There are no reminders.</p>
+	{/section}
+    </div>
+</div>

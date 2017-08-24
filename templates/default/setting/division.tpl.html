@@ -1,0 +1,35 @@
+{* notag *}
+<div id="company_deptlisting">{include file=setting/divisionlisting}</div>
+{literal}
+<script type="text/javascript">
+	function remove_division(id,chc){
+		 var url="##LBL_SITE_URL##index.php/setting/remove_division/ce-0";
+		 if(chc==''){
+			chc=jqueryConfirm("Do you really want to delete this division?","remove_division",id);
+		 }
+		 var qstart=$("#start").val();
+		 var cnt=$("#cnt").val();
+		 
+		 if(chc){
+			 cShowActivity('1');
+			 $.post(url,{id_division:id,qstart:qstart,cnt:cnt},function(res){
+				if(check_JSsession(res,1)) {
+		 			cHideActivity();
+				 	$('#setting_divisions').html(res);
+				}
+			 });
+		 }else{
+		 	return false;
+		 }
+	}
+	function addEditDivision(ch,id){
+		var url="##LBL_SITE_URL##index.php/setting/addEditDivision/ce-0";
+		cShowActivity('');
+		$.post(url,{ch:ch,id:id},function(res){
+			if(check_JSsession(res,0)) {
+				show_fancybox(res);
+			}
+		});
+	}
+</script>
+{/literal}

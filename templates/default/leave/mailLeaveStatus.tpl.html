@@ -1,0 +1,10 @@
+{assign var=leavestatus value=$util->get_values_from_config('LEAVE_STATUS')}
+Dear {$sm.firstname} {if $sm.middlename}{$sm.middlename} {/if}{$sm.lastname},<br><br>
+	Your leave has been {$leavestatus[$sm.leave_status]} by the administrator.<br><br>
+	Leave applied: from <b>{$sm.from_date|date_format:"%d-%m-%Y"}</b> to <b>{$sm.to_date|date_format:"%d-%m-%Y"}</b> <br><br>
+	Reason: {$sm.notes} 
+	
+<br /><br />
+
+Regards,<br>
+Admin

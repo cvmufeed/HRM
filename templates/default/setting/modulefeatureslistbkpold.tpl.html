@@ -1,0 +1,177 @@
+{* notag *}
+{if defined($smarty.const.LINK_SEPARATOR)}
+	{assign var=sep value=$smarty.const.LINK_SEPARATOR}
+{else}
+	{assign var=sep value="-"}
+{/if}
+<div class="cont" id="setting_module">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+   	<div class="content">
+
+            <div style="margin-right:10px;">
+            <div class="cont_hdr1 fltlft" style="padding-left:10px;">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" style="width:881px;">
+                 <div class="fltlft">
+                            Module Features - {$sm.module.module_name}({$sm.next_prev->total})
+                        </div>
+                <div class="fltrht">{if $smarty.session.id_company}<input type="button" name="addmodules" value="Add" onclick="addfeatures('{$sm.module.id_modules}');" class="login_btn"/>{/if}</div>
+                 <input type="hidden" name="start" id="start" value="{$sm.next_prev->start}" />
+                 <input type="hidden" name="cnt" id="cnt" value="{$sm.list|@count}" />
+                <div class="clear"></div>
+                </div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+
+<div class="cont_txt" style="margin-left:10px;">
+                        <div class="txtbg_top fltlft"></div>
+                        <div class="txtbg_mdl fltlft">
+
+
+               {if $sm.list}<br />
+                <table class="tbl_listing mrgtp0">
+                         <thead>
+                            <tr>
+                                {foreach from=$sm.field item=item key=key name=foric}
+                                    {if $key == $smarty.session.$m.sort_by}
+                                    {if $smarty.session.$m.sort_order=="ASC"}
+                                        {assign var=cls value="asc"}
+                                    {else}
+                                        {assign var=cls value="desc"}
+                                    {/if}
+                                    {else}
+                                    {assign var=cls value=""}
+                                    {/if}
+                                    <th class="email">
+                                        {if $item.1!=0}
+                                        {if $sm.ajax}
+                                        <a href="javascript:get_next_page('##APP_ROOT_URL##{$sm.uri}/sort_by{$sep}{$key}',0,0,'{$smarty.request.page}_{$smarty.request.choice}')">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                        {else}
+                                        <a href="##APP_ROOT_URL##{$sm.uri}/sort_by{$sep}{$key}">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                        {/if}
+                                        {else}
+                                        {if $item!=""}{$item.0}{else}{$key}{/if}
+                                        {/if}
+                                    </th>
+                                 {/foreach}
+                                <th><b>Iswriteaccess.</b></th>
+                                 <th><b>Date Created.</b></th>
+                                {if $smarty.session.id_company}
+                                <th><b>Action</b></th>
+                                {/if}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">
+                            <td> {$x.features_name|capitalize:true|default:"NA"}</a></td>
+                            <td>{$x.iswriteaccess}</td>
+                             <td>{$x.create_date}</td>
+                            {if $smarty.session.id_company}
+                            <td>
+                            <a href="javascript:void(0);" onclick="editfeatures('edit','{$x.id_modulefeatures}','{$sm.module.id_modules}')">
+                                    <img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="" title="Edit"/></a>
+                                <img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="delete" title="Delete" onclick="return del('{$x.id_modulefeatures}','');" style="cursor:pointer;">
+                            </td>
+                            {/if}
+                            </tr>
+                            {/section}
+                        </tbody>
+                     </table>
+                        <div>
+                                {if $sm.type=='advance'}
+                                <div class="pagination_adv">
+                                {$sm.next_prev->generateadv()}
+                                </div>
+                                {elseif $sm.type=='box'}
+                                <div class="pagination_box">
+                                <div align="center">{$sm.next_prev->generate()}</div>
+                                </div>
+                                {elseif $sm.type=='normal'}
+                                <div class="pagination">
+                                <div align="center">{$sm.next_prev->generate()}</div>
+                                </div>
+                                {elseif $sm.type=='nextprev'}
+                                <div class="pagination">
+                                <div align="center">{$sm.next_prev->onlynextprev()}</div>
+                                </div>
+                                {elseif $sm.type=='extra'}
+                                <div class="pagination_box">
+                                <div align="center">{$sm.next_prev->generateextra()}</div>
+                                </div>
+                                {else}
+                                {if $sm.type!='no'}
+                                <div>
+                                    <div align="center">{$sm.next_prev->generate()}</div>
+                                </div>
+                                {/if}
+                                {/if}
+                            </div>
+                {else}<br />
+                            <div align="center">There is no Featurelist for {$sm.module.module_name} module</div>
+                        {/if}
+
+
+
+                        </div>
+                        <div class="txtbg_btm fltlft"></div>
+                        <div class="clrbth"></div>
+</div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+	</div>
+    <div class="cont_bg_btm"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{literal}
+<script type="text/javascript">
+function addfeatures(id_modules){
+	cShowActivity('');
+	//var id = $.trim($("#upd_id").val());
+	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"setting",choice:"addfeatures",ce:0,id_modules:id_modules},function(res){
+		show_fancybox(res);
+	});
+}
+function editfeatures(edit,id_features,id_modules){
+	cShowActivity('');
+ 	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"setting",choice:"editfeatures",ce:0,id:id_features,id_modules:id_modules},function(res){
+		show_fancybox(res);
+	});
+}
+var id_modulefeatures;
+function del(id_modulefeatures,chc){
+
+	if(chc==''){
+		chc=jqueryConfirm("Do you really want to delete this record?","del",id_modulefeatures);
+	}
+	if(chc){
+		cShowActivity('1');
+	}else{
+		return false;
+	}
+ 	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"setting",choice:"deletefeatures",ce:0,id_modulefeatures:id_modulefeatures},function(res){
+		$("#setting_module").html(res);
+		cHideActivity();
+	});
+}
+
+
+</script>
+{/literal}

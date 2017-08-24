@@ -1,0 +1,23 @@
+{* notag *}
+<div id="company_hrformlisting">{include file=setting/hrFormListing}</div>
+{literal}
+<script type="text/javascript">
+	function download(fname,id){
+		var url="##LBL_SITE_URL##index.php/setting/downloadHrForm/ce-0";
+		$.post(url,{fname:fname,id:id},function(res){
+			show_fancybox(res);
+		});
+	}
+	$(document).ready(function(){
+		setTimeout('refresh()',10000);
+	});
+	function refresh(){
+		var qs=$("#start").val();
+		var url="##LBL_SITE_URL##index.php/setting/hrForms/ce-0";
+		$.post(url,{chk:1,qstart:qs},function(res){
+		 	$('#company_hrformlisting').html(res);
+		});
+		setTimeout('refresh()',10000);
+	}
+</script>
+{/literal}

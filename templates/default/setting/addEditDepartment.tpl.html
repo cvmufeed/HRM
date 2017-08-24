@@ -1,0 +1,92 @@
+<div style="width:400px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:328px;">
+            {if $sm.res_department}Edit{else}Add{/if} Department
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+        <form action="" enctype="multipart/form-data" id="department" name="department" method="post">
+	<input type="hidden" name="id_department" id="id_department" value="{$sm.res_department.id_department}" />
+	<table class="listing_tbl">
+		<tr>
+		    <td align="right"><b>Division name: <b></td>
+		    <td>
+		    	{if $sm.res_department.id_division}
+		    		<input type="hidden" name="department[id_division]" value="{$sm.res_department.id_division}">
+		    	{/if}
+		    	<select name="department[id_division]" id="division_name" {if $sm.res_department.id_division} disabled="disabed"{/if}>
+		    		<option value="">-- Select --</option>
+				{html_options options=$sm.division selected=$sm.res_department.id_division}
+			</select>
+		    </td>
+		    </tr>
+		<tr>
+			<td align="right"><b>Department name:</b></td>
+			<td><input name="department[dept_name]" type="text" id="dept_name" value="{$sm.res_department.dept_name}"/>
+		</tr>
+		<tr>
+			<td align="right"><b>Notes: </b></td>
+			<td><textarea name="department[notes]"  id="notes" cols="23" rows="5">{$sm.res_department.notes}</textarea></td>
+		</tr>
+		<tr>
+        	<td></td>
+			<td>
+			<input name="add" id="add" type="button" value="{if $sm.res_department}Update{else}Add{/if}" onclick="department_manupulation();" class="login_btn">
+			</td>
+		</tr>	
+	</table>
+</form>
+    </div>
+</div>
+{literal}
+<script type="text/javascript">
+	forminfo("#department");
+	function  validate_department_information() {
+		var validator=$("#department").validate({
+			rules: {
+				"department[id_division]": {
+					required:true
+				},
+				"department[dept_name]": {
+					required:true
+				}
+			},
+			messages: {
+				"department[id_division]": {
+					required:flexymsg.required
+				},
+				"department[dept_name]": {
+					required:flexymsg.required
+				}
+			}
+		});
+		return validator.form();
+	}
+	function department_manupulation(){
+		if(validate_department_information()){
+			var url1=$('#department').serialize();
+			var url2;
+			if($('#id_department').val()){
+				var qstart=$("#start").val();
+				var url2="##LBL_SITE_URL##index.php/setting/updatedepartment/ce-0-qstart-"+qstart+"-?";
+			}else{
+				var url2="##LBL_SITE_URL##index.php/setting/insertdepartment/ce-0-?";
+			}
+			var url=url2+url1;
+			cShowActivity('2');
+			$.post(url,function(res){
+				if(check_JSsession(res,1)) {
+					$('#setting_departments').html(res);
+					$.fancybox.close();
+					cHideActivity();
+				}
+			});
+		}else{
+			return false;
+		}
+	}
+</script>
+{/literal}

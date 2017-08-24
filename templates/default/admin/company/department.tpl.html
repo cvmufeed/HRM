@@ -1,0 +1,35 @@
+{* notag *}
+
+            <h3>Departments</h3>
+              	<form action="" enctype="multipart/form-data" id="department" name="department" method="post">
+                <table align="center" border="1">
+                    <tr>
+                    <td align="right">Department name</td>
+                    <td><input name="dept[dept_name]" type="text" id="dept_name"/></td>
+                    <td align="right"><input name="add" id="add" type="button" value="Add" onclick="dept_manupulation();"></td>
+                  </tr>
+      				
+                </table>
+                <input type="hidden" name="id_department" id="id_department" value="" />
+			</form>
+<div id="company_deptlisting">{include file=company/departmentslisting}</div>
+{literal}
+<script type="text/javascript">
+	function dept_manupulation(){
+		alert($('#dept_name').val());
+		var url1=$('#department').serialize();
+		var url2;
+		if($('#id_department').val()){
+		var url2="##LBL_SITE_URL##company/updatedepartment/ce-0-?";
+		}else{
+		var url2="##LBL_SITE_URL##company/insertdepartment/ce-0-?";
+		}
+		var url=url2+url1;
+		$.post(url,{},function(res){
+		$('#dept_list').html(res);
+	});
+	return false;
+	}
+	
+</script>
+{/literal}

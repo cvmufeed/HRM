@@ -1,0 +1,103 @@
+{assign var=currency value=$util->get_values_from_config('CURRENCY')}
+{assign var=pay_frequency value=$util->get_values_from_config('PAY_FREQUENCY')}
+<div style="width:445px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:373px; overflow:hidden;">
+            Salary details of <b>{$smarty.session.fullname}</b>
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+<form id="salary_form" name="salary_form" method="post" action="javascript:void(0);">
+    <input type="hidden" name="salary[id_employee]" value="{$sm.id}">
+    <table class="listing_tbl" width="100%">
+        <tr>
+            <td width="30%">Salary:</td>
+            <td width="50%" valign=middle align=center>
+                <input type="text" name="salary[current_salary]" value="" id="current_salary" class="text">&emsp;
+                       </td>
+            <td width="20%">
+     <select name="salary[currency]" id="currency" style="width:100px;">
+                    {html_options options=$currency selected=''}
+                </select>
+                <label class="error" generated="true" for="current_salary"></label>
+
+</td>
+        </tr>
+        <tr>
+            <td>Payment:</td>
+            <td>
+                <select name="salary[pay_frequency]" id="pay_frequency">
+                    {html_options options=$pay_frequency selected=''}
+                </select>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Notes:</td>
+            <td><textarea name="salary[reason]" class="text" rows="5"></textarea></td>
+	    <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_salary" value="Save" onclick="save();" class="login_btn">
+            </td>
+            <td></td>
+        </tr>
+    </table>
+</form>
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#salary_form");
+function save(){
+	var res = salaryForm();
+	if(res){
+		cShowActivity('2');
+		var data=$("#salary_form").serialize();
+		var url="##LBL_SITE_URL##index.php/employee/insertSalary?"+data;
+		$.post(url,{ce:0},function (res){
+			$("#employee_salaryDetail").html(res);
+			$.fancybox.close();
+			cHideActivity();
+		});
+	}else
+		return false;
+}
+function salaryForm(){		
+	var validator_salary_form=$("#salary_form").validate({
+		rules: {
+			"salary[current_salary]": {
+				required:true,
+				number:true
+			}
+		},
+		messages: {
+			"salary[current_salary]":{
+				required:flexymsg.required,
+				number:"<br>Please enter a valid salary."
+			}
+		}
+	});
+	return validator_salary_form.form();
+}
+</script>
+<style type="text/css">
+#salary_form .text {
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#salary_form select {
+	border:1px solid #ccc;
+	padding:4px;
+}
+</style>
+{/literal}

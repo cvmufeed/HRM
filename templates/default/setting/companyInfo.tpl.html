@@ -1,0 +1,99 @@
+{literal}
+<script type="text/javascript">
+	function editCompanyInfo(){
+		var url="##LBL_SITE_URL##index.php/setting/companyInfo/";
+		$.post(url,{edit:1,ce:0},function(res){
+			if(check_JSsession(res,1)) {
+				$('#companyInfoList').hide();
+				$('#editCompanyInfo').show();
+				$("#editCompanyInfo").html(res);
+			}
+		 });
+	}	
+	function cancelEdit(){
+		$('#companyInfoList').show();
+		$('#editCompanyInfo').hide();
+	 }	
+</script>
+{/literal}
+{assign var=curr value=$util->get_values_from_config('CURRENCY')}
+<div id="companyInfo">
+	<div id="companyInfoList">
+        <div class="cont">
+            <div class="cont_bg_top"></div>
+            <div class="cont_bg_mdl" style="padding-bottom:10px;">
+                <div class="cont_hdr1 fltlft">
+                    <div class="cont_hdr_lft fltlft"></div>
+                    <div class="cont_hdr_mdl1 fltlft" style="width:885px;">Company Information</div>
+                    {assign var=company value=$sm.company_res}
+                    <div class="cont_hdr_rht fltlft"></div>
+                </div>
+                <div class="clrbth"></div>
+<div class="cont_txt" style="margin-left:20px;">
+                        <div class="txtbg_top fltlft"></div>
+                        <div class="txtbg_mdl fltlft">
+                <table border="0" class="listing_tbl">
+                        <tr>
+                            <td width="20%">Company name: </td>
+                            <td align="80%">{$sm.res.company_name}</td>
+                        </tr>
+                        <tr>
+                            <td>Company information: </td>
+                            <td>{$sm.res.company_info}</td>
+                        </tr>
+                        <tr>
+                            <td>Number of employees: </td>
+                            <td>{$sm.res.cnt}</td>
+                        </tr>
+                        <tr>
+                            <td>Company logo: </td>
+                            <td><img src='##LBL_SITE_URL##image/orig/companylogo/{$sm.res.id_company}_{$sm.res.logo}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Address: </td>
+                            <td>{$sm.res.address}</td>
+                        </tr>
+                        <tr>
+                            <td>Tax ID: </td>
+                            <td>{$sm.res.tax_id}</td>
+                        </tr>
+                        <tr>
+                            <td>Twitter Id: </td>
+                            <td><a href=http://{$sm.res.twitter_id}>{$sm.res.twitter_id}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Facebook Id: </td>
+                            <td><a href=http://{$sm.res.facebook_id}>{$sm.res.facebook_id}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Linkedin ID: </td>
+                            <td><a href=http://{$sm.res.linkedin_id}>{$sm.res.linkedin_id}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Company e-mail: </td>
+                            <td><a href=mailto://{$sm.res.email_id}>{$sm.res.email_id}</a></td>
+                        </tr>
+                        <tr>
+                            <td>HQ timezone:</td>
+                            <td>{$company.timezone_text }</td>
+                        </tr>
+                        <tr>
+                            <td>Currency:</td>
+                            <td>{$company.currency} ({$curr[$company.currency]})</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="button" name="edit" value="Edit" onclick="editCompanyInfo();" class="login_btn" /></td>
+                        </tr>  
+                    </table>
+                    
+                     </div>
+                        <div class="txtbg_btm fltlft"></div>
+                        <div class="clrbth"></div>
+</div>
+            </div>
+            <div class="cont_bg_btm"></div>
+        </div>
+	</div>
+	<div id="editCompanyInfo" style="display:none;"></div>
+</div>

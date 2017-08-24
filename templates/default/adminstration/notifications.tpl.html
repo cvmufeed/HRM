@@ -1,0 +1,112 @@
+<div id="adminstration_leave_type">
+    <div class="cont">
+        <div class="cont_bg_top"></div>
+        <div class="cont_bg_mdl">
+            <form method="post" action="##LBL_SITE_URL##index.php/adminstration/{if $sm.res}updateNotification{else}insertNotification{/if}" id="notifi"  name="notifi" onsubmit="return validate_notifi();">
+                <input type="hidden" id="qstart" {if $sm.qstart} value="{$sm.qstart}"{else} value="1"{/if}/>
+                <input type="hidden" id="notify_id" name="notify_id" value="{$sm.res.id_notification}">	
+                <div class="fltlft">
+                    <div class="cont_hdr fltlft" style="margin-top:-10px">
+                        <div class="cont_hdr_lft fltlft"></div>
+                        <div class="cont_hdr_mdl fltlft">Automatic notifications</div>
+                        <div class="cont_hdr_rht fltlft"></div>
+                        <div class="clear"></div>
+                        <div id="dv1">
+                            <table cellspacing="0" border="0" width="80%" align="left">
+<tr><td colspan="2">Send notifications near following dates:<p></td></tr>
+                                <tr>
+                                    <td width=10% align="center" valign="middle"><input type="checkbox" name="notification[birthday]" id="birthday" {if $sm.res.birthday}checked="checked" value="1" {else}value="0" {/if}></td>
+                                    <td valign="center">Employee birthdays</td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="middle"><input type="checkbox" name="notification[contract_end]" id="contract_end" {if $sm.res.contract_end}checked="checked" value="1" {else}value="0"{/if}></td>
+                                    <td valign="center">Employee contract ending</td>
+                                </tr>
+                                <tr>
+                                    <td colspaln="2"><div style="margin:6px 0px 0px 4px;">Duration: &nbsp; </div></td>
+                                    <td>
+                                        <select name="notification[notification_status]" id="notification_status" style="width:150px;">
+                                            {html_options options=$sm.duration selected=$sm.res.notification_status}
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>             
+                    </div>
+                    <div class="cont_hdr fltlft" style="margin-top:-10px">
+                        <div class="cont_hdr_lft fltlft"></div>
+                        <div class="cont_hdr_mdl fltlft">Event notifications</div>
+                        <div class="cont_hdr_rht fltlft"></div>
+                        <div class="clear"></div>
+                        <div id="dv2">
+                            <table cellspacing="0" width="80%" align="left">
+                                <tr>
+<tr><td colspan="2">Send e-mail notification when following events occur:<p></td></tr>
+                                    <td  width=10% align="center" valign="middle"><input type="checkbox" name="notification[emp_add]" id="emp_add" {if $sm.res.emp_add}checked="checked" value="1" {else}value="0"{/if}></td>
+                                    <td valign="center">An employee is added</td>
+                                </tr>
+                                <tr>
+                                    <td align="center"><input type="checkbox" name="notification[emp_modify]" id="emp_modify" {if $sm.res.emp_modify}checked="checked" value="1" {else}value="0"{/if} ></td>
+                                    <td valign="center">An employee is modified</td>
+                                </tr>
+                                <tr>
+                                    <td align="center"><input type="checkbox" name="notification[emp_remove]" id="emp_remove" {if $sm.res.emp_remove}checked="checked" value="1" {else}value="0"{/if} ></td>
+                                    <td valign="center">An employee is removed</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="clrbth"></div>
+                <div align="left" style="width:66%; margin-left:50px;">
+                    <input type="checkbox" id="chk1" onclick="return show_txt();" value="1" {if $sm.res.id_employee!=0}checked="checked"{/if}><font color="#707070">Send a copy of all event notifications to this user:</font><input type="text" size="35" id="employee_name" name="employee_name" value="{if $sm.res.id_employee!=0}{$sm.name}{/if}" style="margin-left:10px;"><input type="hidden" id="id_employee" name="notification[id_employee]" value="{$sm.res.id_employee}"><br /><div style="margin-right:160px; margin-top:6px;" class="fltrht"><input type="submit" value="Save" id="sub" class="login_btn"></div>
+                <div class="clrbth"></div>    
+                </div>
+            </form>
+        </div>
+        <div class="cont_bg_btm"></div>
+    </div>
+</div>
+{literal}
+<script type="text/javascript">
+function validate_notifi() {
+	var x=true;
+	if($("#chk1").attr("checked")){
+		if(!$("#employee_name").val()){
+			x=false;
+			$("#target").html('');
+			jqueryAlert("Please enter the user field");
+		}
+	}
+	if(x)
+		 cShowActivity('1');
+	return x;
+}
+function show_txt(){
+	var emp_name='{/literal}{$sm.name}{literal}';
+	var id_emp='{/literal}{$sm.res.id_employee}{literal}';
+	
+	if($("#chk1").attr("checked")){
+		$("#employee_name").focus();
+		$("#employee_name").val(emp_name);
+		$("#id_employee").val(id_emp);
+	}else{		
+		$("#employee_name").val('');
+		$("#id_employee").val('');
+	}
+}
+$(document).ready(function(){
+	$("#employee_name").autocomplete("##LBL_SITE_URL##index.php/adminstration/userAutoComplete/ce-0-for-auto");
+	$("#employee_name").result(function(event, data, formatted) {
+	 if (data) {
+		var empId = data[1].split("::");
+		$('#employee_name').val(empId[1]);
+		$('#id_employee').val(empId[0]);
+		if(empId[0]=='abc'){
+			window.location="##LBL_SITE_URL##";
+		}
+	}
+	});
+});
+</script>
+{/literal}

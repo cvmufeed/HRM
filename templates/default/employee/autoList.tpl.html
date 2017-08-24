@@ -1,0 +1,18 @@
+{* notag *}
+{if $sm.flag eq 1}
+	{foreach from=$sm.data key=key item=item}
+		<span class="fcolor">{$item}</span>
+	{foreachelse}
+		<span class="fcolor">No results</span>
+	{/foreach}
+{/if}
+{if $sm.flag==2}
+	{if $sm.data}
+		{section name=emp loop=$sm.data}
+		{assign var=x value=$sm.data[emp]}
+			<a href="##LBL_SITE_URL##index.php/employee/profile/id-{$x.id_employee}" style="text-decoration:none; border:0;">{if $x.avatar !=''}<img src="##LBL_SITE_URL##image/thumb4_search/avatar/{$x.id_employee}_{$x.avatar}" title="Profile Pic" style="height:50px;width:50px;"/>{else}<img src="##LBL_SITE_URL##templates/css_theme/img/avatar/search/hrm_{if $x.gender eq M}male.jpg{else}female.jpg{/if}" title="Profile Pic"/>{/if}&emsp;{$x.name}</a>|{$x.id_employee}::{$x.name}
+		{/section}
+	{else}
+		<span class="fcolor">No records</span>|''::No record
+	{/if}
+{/if}

@@ -1,0 +1,8 @@
+{* notag *}
+{if $sm.title}
+	{foreach key=key item=item from=$sm.title}
+		<span class="fcolor">{$item}</span>|{$item}
+	{/foreach}
+{else}
+	<span class="fcolor">No records</span>|No record
+{/if}

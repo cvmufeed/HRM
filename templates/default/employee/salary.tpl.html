@@ -1,0 +1,77 @@
+{assign var=pay_frequency value=$util->get_values_from_config('PAY_FREQUENCY')}
+{assign var=currency value=$util->get_values_from_config('CURRENCY')}
+<div class="cont" id="employee_salaryDetail">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+		<div class="message">{include file="employee/message"}</div>
+		<div class="content">
+			{include file="employee/leftPan"}
+            {include file="employee/rightPan"}
+            <div style="margin-right:10px;">
+            <div class="cont_hdr1 fltlft" style="padding-left:10px;">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" style="width:881px;">Salary history ({$sm.list|@count})
+                <div class="fltrht">{if $smarty.session.id_company}<input type="button" name="addsal" value="Add" onclick="addSalary();" class="login_btn"/>{/if}</div>	
+                <div class="clear"></div>
+                </div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+
+<div class="cont_txt" style="margin-left:10px;">
+                        <div class="txtbg_top fltlft"></div>
+                        <div class="txtbg_mdl fltlft">
+                    <input type="hidden" name="update_id" value="{$sm.res_personal.id_employee}" id="upd_id">
+                    <table class="tbl_listing mrgtp0">
+                        {if $sm.list}
+                        <thead>
+                            <tr>
+                                <th><b>Previous salary</b></th>
+                                <th><b>Current salary</b></th>
+                                <th><b>Payment frequency</b></th>
+                                <th><b>Currency</b></th>
+                                <th><b>Change date</b></th>
+                                <th><b>Notes</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">
+                            <td>{$x.previous_salary}</td>
+                            <td>{$x.current_salary}</td>
+                            <td>{$pay_frequency[$x.pay_frequency]}</td>
+                            <td>{$currency[$x.currency]}</td>
+                            <td>{$x.add_date|date_format:"%d-%m-%Y"}</td>
+                            <td>{$x.reason|wordwrap:40:"<br />"|default:"NA"}</td>
+                            </tr>
+                            {/section} 
+                        </tbody>
+                        {else}
+                            <tr><td>No salary information yet for <b>{$smarty.session.fullname|capitalize:true}</b></td></tr>
+                        {/if}
+                     </table>
+                     </div>
+                        <div class="txtbg_btm fltlft"></div>
+                        <div class="clrbth"></div>
+</div>
+
+
+            </div>
+            <div class="clear"></div>
+        </div>
+	</div>
+    <div class="cont_bg_btm"></div>
+</div>
+{literal}
+<script type="text/javascript">
+function addSalary(){
+	cShowActivity('');
+	var id = $.trim($("#upd_id").val());
+	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"employee",choice:"addSalary",ce:0,id:id},function(res){
+		show_fancybox(res);
+	});
+}
+</script>
+{/literal}

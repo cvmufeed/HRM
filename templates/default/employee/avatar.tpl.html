@@ -1,0 +1,143 @@
+<div style="width:400px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:328px;">
+            {if $smarty.session.id_company}Profile picture for {$smarty.session.fullname}{/if}
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+<form action="##LBL_SITE_URL##index.php/product/updateAvatar" name="avatar_form" id="avatar_form" enctype="multipart/form-data" method="post">
+<input type="hidden" name="update_id" value="{$sm.avatar_res.id_employee}"/>
+<table class="listing_tbl">
+	<tr>
+		<td align="right"><b>Profile photo: </b></td>
+		<td align="left">
+			<input type="file" name="image" id="image1" class="i" onchange="showImage(1);">
+			<input type="hidden" name="hid_image" id="hid_image" value="{if $sm.avatar_res.avatar}{$sm.avatar_res.id_employee}_{$sm.avatar_res.avatar}{/if}"/>
+			<input type="hidden" name="prev_img" id="prev_img1" value="" />
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2"><span id="r1"></span></td>
+	</tr>
+	<tr>
+    	<td></td>
+		<td>
+			<input type="button" name="save_pic" value="Save" onclick="saveProfilePic();" class="login_btn">
+		</td>
+	</tr>
+</table>
+</form>
+
+    </div>
+</div>
+
+
+
+
+{literal}
+<script type="text/javascript">
+	var mid;
+	function showImage(mid){
+		mid=mid;
+		var im=$('#image'+mid).val();
+		if(im){
+		var y=checkExt();
+		if(y){
+			cShowActivity('2');
+			ch='previewImage';
+			var url="##LBL_SITE_URL##index.php/page-employee-choice-"+ch+"-ce-0-mid-"+mid;
+				$.ajaxFileUpload({
+					url : url,
+					secureuri:false,
+					fileElementId:'image'+mid,
+					dataType: 'json',
+					complete: function (data, status){
+						//jqueryAlert(data);jqueryAlert(status);
+						z = data.responseText;
+						z1=z.split(':');
+						var img="Selected image: <img src='##LBL_SITE_URL##preview/thumb/"+z1[0]+"'>";
+						$('#prev_img'+mid).val(z1[0]);
+						$('#r'+mid).html(img);
+						cHideActivity();
+					}
+				});
+			}
+		}
+	}
+	var extArray = new Array("jpg","gif", "png", "bmp", "jpeg"); // the extensions those are allowed
+	function checkExt() {
+		var form_submit;
+		var j,i=0;
+		var file_val = new Array();
+		var tot_file = $('#avatar_form').find('input[class="i"]');
+		if (tot_file.length<1){
+			return;
+		}else{
+			form_submit = false;
+			file_val[i] = $('#avatar_form').find('input[class="i"]').eq(i).val();
+			file_val[i] = file_val[i].toLowerCase();
+			var chk = (/[.]/.exec(file_val[i])) ? /[^.]+$/.exec(file_val[i]) : undefined;
+			for (var k = 0; k < extArray.length; k++) {
+				if (extArray[k] == chk) {
+					form_submit = true;
+					if($('.invalid_ext').html()!=null){
+						$('.invalid_ext').remove();
+					}
+				}
+			}
+			if (form_submit == false) {
+				j=i;
+			}
+		}
+		if(form_submit){
+			return true;
+		}else{
+			var sp = '<div class="invalid_ext">This is not a valid file extension.</div>';
+			jqueryAlert("Please only upload files that end in types:  "+ (extArray.join("  ")) + "\nPlease select a new file to upload and submit again.");
+			if($('.invalid_ext').html()==null){
+				$('#avatar_form').find('input[class="i"]').eq(j).after(sp);
+			}
+			return false;
+		}
+	}
+function saveProfilePic(){
+	var check=avatar();
+	if(!check){
+		return false;
+	}
+	cShowActivity('2');
+	var data=$("#avatar_form").serialize();
+	var url="##LBL_SITE_URL##index.php/page-employee-choice-updateAvatar-ce-0?"+data;
+	var httpRequest = new XMLHttpRequest();
+	httpRequest.open('POST', url, false);
+	httpRequest.send(); 
+	if (httpRequest.status == 200) {
+		var z=httpRequest.responseText;
+		res=z.split("::");
+		$("#profile_avatar").attr("src","##LBL_SITE_URL##image/thumb/avatar/"+res[0]);
+		$.fancybox.close();
+		callmsg(res[1]);
+		cHideActivity();
+	}	
+}
+function avatar(){		
+	var validator_avatar=$("#avatar_form").validate({
+		rules: {
+			"prev_img": {
+				required:true
+			}
+		},
+		messages: {
+			"prev_img":{
+				required:'<br>This field is required.'
+			}
+		}
+	});
+	return validator_avatar.form();
+}
+</script>
+{/literal}

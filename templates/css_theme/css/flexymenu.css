@@ -1,0 +1,91 @@
+ul.menu {
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+ul.menu * {
+	margin:0;
+	padding:0;
+}
+ul.menu a {
+	display:block;
+	color:#fff;
+	text-decoration:none;
+ }
+ul.menu li {
+	position:relative;
+	float:left;
+	margin-right:2px;
+}
+ul.menu ul {
+	position:absolute;
+	z-index:3;
+	top:33px; left:0;
+	background:#1B6DAB;
+	display:none;
+	list-style:none;
+	width:148px;
+}
+ul.menu ul li {
+	position:relative;
+	border:1px solid #A1BACC;
+	border-top:none;
+	width:148px;
+	margin:0;
+}
+ul.menu ul li a {
+	display:block;
+	padding:3px 7px 5px;
+	background:#1B6DAB;
+}
+ul.menu ul li a:hover {
+	background:#4A9EDB;
+	color:#000000;
+}
+ul.menu ul ul {
+	left:148px;
+	top:-1px;
+}
+ul.menu li.openul .mdl_prt {
+	background:url(../../images/blue/menu_bgmdl.png) repeat-x;
+}
+ul.menu li.openul .mdl_prt a {
+	display:block;
+	padding:9px 0px 8px;
+}
+ul.menu li.openul .lft_prt,ul.menu li.openul .rht_prt	{
+	background:url(../../images/blue/menu_bglft.png) no-repeat;
+	height:33px;
+	width:11px;
+}
+ul.menu li.openul .rht_prt	{
+	background:url(../../images/blue/menu_bgrht.png) no-repeat;
+}
+ul.menu li.openul:hover .lft_prt,ul.menu li.sel .lft_prt	{
+	background:url(../../images/blue/menu_hoverlft.png) no-repeat;
+}
+ul.menu li.openul:hover .rht_prt,ul.menu li.sel .rht_prt	{
+	background:url(../../images/blue/menu_hoverrht.png) no-repeat;
+}
+ul.menu li.openul:hover .mdl_prt,ul.menu li.sel .mdl_prt {
+	background:url(../../images/blue/menu_hovermdl.png) repeat-x;
+	display:block;
+}
+ul.menu .sub {
+	background:#d1d1d1 url(images/arrow.gif) 136px 8px no-repeat;
+}
+ul.menu .topline {
+	border-top:1px solid #A1BACC;
+}
+/* Added by jagannath */
+.bgactive{
+        background: #fff;
+	opacity:0.7;
+	filter:alpha(opacity="70%");
+	z-Index:1000;
+}
+textarea{
+	resize:none;
+	font-family:Arial, Helvetica, sans-serif;
+}
+/* end */

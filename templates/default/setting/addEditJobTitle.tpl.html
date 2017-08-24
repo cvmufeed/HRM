@@ -1,0 +1,152 @@
+{* notag *}
+<div style="width:400px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:328px;">
+            {if $sm.res.id_jobtitle} Edit{else}Add {/if}Job Title
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+        <form action="" enctype="multipart/form-data" id="jobtitles" name="jobtitles" method="post">
+	<table class="listing_tbl">
+		<input type="hidden" name="id_job_title" id="id_job_title" value="{$sm.res.id_jobtitle}" />
+		<tr>
+			<td align="right"><b>Division name: </b></td>
+			<td>
+				{if $sm.res.id_division}
+		    		<input type="hidden" name="jobtitles1[id_division]" value="{$sm.res.id_division}">
+		    		{/if}
+				<select name="jobtitles1[id_division]" id="divname" onchange="showDepartment();" {if $sm.res.id_division} disabled="disabed"{/if}>
+				       	<option value="" >Select</option>
+				       	{html_options options=$sm.div selected=$sm.res.id_division}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><b>Department name: </b></td>
+			<td>
+				{if $sm.res.id_department}
+		    		<input type="hidden" name="jobtitles1[id_department]" value="{$sm.res.id_department}">
+		    		{/if}
+				<select name="jobtitles1[id_department]" id="deptname1" onchange="showTeam()" {if $sm.res.id_department} disabled="disabed"{/if}>
+					<option value="">Select</option>
+					{if $sm.res.id_jobtitle} 
+						{html_options options=$sm.dept1 selected=$sm.res.id_department}
+					{/if}
+				</select>
+			</td>
+	    	</tr>
+		<tr>
+			<td align="right"><b>Team name: </b></td>
+			<td>
+				{if $sm.res.id_division}
+		    		<input type="hidden" name="jobtitles1[id_team]" value="{$sm.res.id_team}">
+		    		{/if}
+				<select name="jobtitles1[id_team]" id="team1" {if $sm.res.id_team} disabled="disabed"{/if}>
+					<option value="">Select</option>
+					{if $sm.res.id_jobtitle} 
+						{html_options options=$sm.team1 selected=$sm.res.id_team}
+					{/if}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><b>Job title: </b></td>
+			<td><input name="jobtitles1[job_title_name]" type="text" id="job_title_name1" value="{if $sm.res}{$sm.res.jobtitlesname}{/if}"/>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><b>Notes: </b></td>
+			<td><textarea name="jobtitles1[notes]" id="jnotes">{$sm.res.notes}</textarea></td>
+		</tr>
+		<tr>
+        	<td></td>
+		    <td>
+			    <input name="add" id="add" type="button" value="{if $sm.res.id_jobtitle}Update{else}Add{/if}" onclick="jobtitles_manupulation();"  class="login_btn">
+		    </td>
+		</tr>	
+	</table>
+</form>
+    </div>
+</div>
+{literal}
+<script type="text/javascript">
+	forminfo("#jobtitles");
+	function jobtitles_manupulation(){
+		if( validate_jobtitles_information()){
+			var url1=$('#jobtitles').serialize();
+			$('#job_title_name').val("");
+			var url2;
+			if($('#id_job_title').val()){
+				var qstart=$("#start").val();
+				var url2="##LBL_SITE_URL##index.php/setting/updatejobtitles/ce-0-qstart-"+qstart+"-?";
+			}else{
+				var url2="##LBL_SITE_URL##index.php/setting/insertjobtitles/ce-0-?";
+			}
+			var url=url2+url1;
+			cShowActivity('2');
+			$.post(url,{chk:1},function(res){
+				$('#setting_jobtitles').html(res);
+				$.fancybox.close();
+				cHideActivity();
+			});
+		}	
+		$('#deptname').val("");
+		$('#divname_jobtitle').val("");
+		$('#job_title_name').val("");
+		return false;
+	}
+	function  validate_jobtitles_information() {
+		var validator=$("#jobtitles").validate({
+			rules: {
+				"jobtitles1[id_department]": {
+					required:true
+				},
+				"jobtitles1[id_division]": {
+					required:true
+				},
+				"jobtitles1[id_team]": {
+					required:true
+				},
+				"jobtitles1[job_title_name]": {
+					required:true
+				}
+			},
+			messages: {
+				"jobtitles1[id_department]": {
+					required:flexymsg.required
+				},
+				"jobtitles1[id_division]": {
+					required:flexymsg.required
+				},
+				"jobtitles1[id_team]": {
+					required:flexymsg.required
+				},
+				"jobtitles1[job_title_name]": {
+					required:flexymsg.required
+				}
+			}
+		});
+		return validator.form();
+	}
+	function showDepartment(){
+		var id_div=$("#divname").val();
+		var status=$('#status').val();
+		var url="##LBL_SITE_URL##index.php/setting/getdeptName/ce-0-?";
+		$.post(url,{id_division:id_div},function(res){
+			$('#deptname1').html(res);
+			$('#team1').html('<option value="">Select</option>');
+		});
+	}
+	function showTeam(){
+		var id_dept=$('#deptname1').val();
+		var status=$('#status').val();
+		var url="##LBL_SITE_URL##index.php/setting/getteamName/ce-0-?";
+		$.post(url,{id_department:id_dept},function(res){
+			$('#team1').html(res);
+		});
+	}
+</script>
+{/literal}

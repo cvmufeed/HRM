@@ -1,0 +1,158 @@
+{* notag *}
+{if defined($smarty.const.LINK_SEPARATOR)}
+	{assign var=sep value=$smarty.const.LINK_SEPARATOR}
+{else}
+	{assign var=sep value="-"}
+{/if}
+
+	<div class="cont">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+    	<div class="cont_hdr1 fltlft">
+            <div class="cont_hdr_lft fltlft"></div>
+            <div class="cont_hdr_mdl1 fltlft">
+                <div class="fltlft">
+                	 Reminders list ({$sm.next_prev->total})
+                </div>
+                <div class="fltrht">
+					<input type="button" name="addEditReminder" value="Add" onclick="addEditReminder('add','')"/>
+                    <span id="createics">
+                        <input type="button" value="Save as iCal" id="ical" name="ical" onclick="createics();" class="login_btn" style="font-size:11px"/>
+                    </span>
+                </div>
+                <div class="clear"></div>
+				<input type="hidden" name="start" id="start" value="{$sm.next_prev->start}" />
+            </div>
+            <div class="cont_hdr_rht fltlft"></div>
+	        <div class="clrbth"></div>
+        </div>
+        <div class="clrbth"></div>
+        <div class="cont_txt">
+            	<div class="txtbg_top fltlft"></div>
+                <div class="txtbg_mdl fltlft">
+                {if $sm.list}
+                    <table width="97%" cellpadding="0" cellspacing="0" border="0" align="center" class="tbl_listing" style="margin-bottom:25px;">
+                        <thead>			
+                            <tr>
+                                {foreach from=$sm.field item=item key=key}
+                                    {if $key == $smarty.session.$m.sort_by}
+                                        {if $smarty.session.$m.sort_order=="ASC"}
+                                            {assign var=cls value="asc"}
+                                        {else}
+                                            {assign var=cls value="desc"}
+                                        {/if}
+                                    {else}
+                                        {assign var=cls value=""}
+                                    {/if}
+                                    <th class="email">
+                                        {if $item.1!=0}
+                                            {if $sm.ajax}
+                                                <div style="width:1px; background:#fff; height:20px; float:left; margin-left:-4px"></div>
+                                                <a href="javascript:get_next_page('##LBL_SITE_URL##{$sm.uri}/sort_by{$sep}{$key}',0,0,'{$smarty.request.page}_{$smarty.request.choice}')">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                            {else}
+                                                <div style="width:1px; background:#fff; height:20px; float:left; margin-left:-4px"></div>
+                                                <a href="##LBL_SITE_URL##{$sm.uri}/sort_by{$sep}{$key}">{if $item!=""}{$item.0}{else}{$key}{/if}</a>
+                                            {/if}
+                                        {else}
+                                            {if $item!=""}{$item.0}{else}{$key}{/if}
+                                        {/if}
+                                    </th>
+                                {/foreach}
+                                    <th class="email brdr_none">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">				
+                                <td class="tl">{$x.reminder}</td>
+                                <td class="tl">{$x.reminder_date|date_format:"%d-%m-%Y %I:%M %p"}</td>
+                                <td>
+                                    {assign var=e value=$x.recurrence_status}
+                                    {$sm.duration[$e]}
+                                </td>
+                                <td class="tl">
+                                    <a href="javascript:void(0);" onclick=" return addEditReminder('edit','{$x.id_reminder}','{$sm.next_prev->start}');"><img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="edit" title="Edit"/></a>
+                                    &nbsp;&nbsp;<a href="javascript:void(0);" onclick="return delreminder('{$smarty.section.cur.total}','{$x.id_reminder}','');"><img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="delete" title="Delete"/></a>
+                                    &nbsp;&nbsp;<a href="javascript:void(0);" id="status{$smarty.section.cur.index}" name="status{$smarty.section.cur.index}" onclick="return change_status('{$smarty.section.cur.index}','{$x.id_reminder}','');" style="cursor:pointer; color:#666">{if $x.status==1}Close{else}Open{/if}</a>
+                                </td>
+                            </tr>			
+                        {/section}
+                        </tbody>
+                    </table>
+                    <div align="center">
+                        {if $sm.type=='advance'}
+                            <div class="pagination_adv">{$sm.next_prev->generateadv()}</div>
+                        {elseif $sm.type=='box'}
+                            <div class="pagination_box">{$sm.next_prev->generate()}</div>
+                        {elseif $sm.type=='normal'}
+                            <div class="pagination">{$sm.next_prev->generate()}</div>
+                        {elseif $sm.type=='nextprev'}
+                            <div class="pagination">{$sm.next_prev->onlynextprev()}</div>
+                        {elseif $sm.type=='extra'}
+                            <div class="pagination_box">{$sm.next_prev->generateextra()}</div></div>
+                        {else}
+                            {if $sm.type!='no'}
+                                <div>{$sm.next_prev->generate()}</div>
+                            {/if}
+                        {/if}
+                    </div>
+                {else}
+                    <div>Sorry,currently system does not have any reminder.</div>
+                {/if}
+                </div>
+                <div class="txtbg_btm fltlft"></div>
+                <div class="clrbth"></div>
+        </div>
+    </div>
+    <div class="cont_bg_btm"></div>
+</div>
+{literal}
+<script type="text/javascript">
+var ch,id;
+function addEditReminder(ch,id,qstart){
+	var url="##LBL_SITE_URL##index.php/adminstration/addEditReminder/ce-0";
+		cShowActivity('');
+		$.post(url,{id_reminder:id,ch:ch,qstart:qstart},function(res){
+			show_fancybox(res);
+		});
+}
+function delreminder(cur,id,chc){
+	 var qstart=$("#start").val();
+	 var url="##LBL_SITE_URL##index.php/adminstration/deleteReminder";
+	 if(chc==''){
+		chc=jqueryConfirm("Do you really want to delete this record?","delreminder",cur,id);
+	 }
+	 if(chc){
+		 cShowActivity('1');
+		 $.post(url,{ce:0,id:id,cur:cur,qstart:qstart,chk:1},function(res){
+			$("#target").html("Deleted sucessfully").show();
+			setTimeout("$('#target').hide()",2000);
+			cHideActivity();
+			$('#adminstration_reminders').html(res);
+		 });
+	 }else
+	 	return false;
+}
+function change_status(itr,id,chc){
+	 var status=$("#status"+itr).html();
+	  if(chc==''){
+		chc=jqueryConfirm("Are you sure you want to "+status+" record?","change_status",itr,id);
+	 }
+	 if(chc){
+		 var qstart='{/literal}{$smarty.request.qstart|default:0}{literal}';
+		 if(status=='Open'){
+			var val=1;
+			var x='Close';
+		 }else if(status=='Close'){
+			var x='Open';
+			var val=2;
+		 }
+		 var url="##LBL_SITE_URL##index.php/adminstration/changeReminderStatus";
+		 $.post(url,{ce:0,id:id,val:val,qstart:qstart},function(res){
+			$("#status"+itr).html(x);
+	 	});
+	}
+}
+</script>
+{/literal}

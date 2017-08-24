@@ -1,0 +1,160 @@
+{assign var=eligibility value=$util->get_values_from_config('ELIGIBILITY')}
+{assign var=coverage value=$util->get_values_from_config('BENEFIT_COVERAGE')}
+<div style="width:415px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:343px;">
+            Benefits for <b>{$smarty.session.fullname}</b>
+        </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+    <span id="benefit_msg" class="error"></span>
+    <form id="benefit_form" name="benefit_form" method="post" action="javascript:void(0);">
+    <table class="listing_tbl">
+        <input type="hidden" name="id_employee" value="{$sm.id}">
+        <input type="hidden" name="id_emp_benefits" value="{$sm.res.id_emp_benefits}">
+        <tr>
+            <td align="right">Benefit:</td>
+            <td>
+                {if $sm.res.is_set neq 1 }
+                <select name="benefit[id_benefits]" id="id_benefits">
+                    <option value="">-- Select --</option>
+                    {html_options options=$sm.benefits selected=$sm.res.id_benefits}
+                </select>
+                {else}
+                    {$sm.res.benefit_name}
+                {/if}
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Coverage:</td>
+            <td>
+                <select name="benefit[coverage]" id="coverage">
+                    {html_options options=$coverage selected=$sm.res.coverage}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Eligibility:</td>
+            <td>
+                <select name="benefit[eligibility]" id="eligibility">
+                    {html_options options=$eligibility selected=$sm.res.eligibility}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Date:</td>
+            <td>
+                <input type="text" name="from_to" id="from_to" value="{if $sm.res}{$sm.res.from_date|date_format:'%d-%m-%Y'} to {$sm.res.to_date|date_format:'%d-%m-%Y'}{/if}" class="text">
+                <img id="imgid" name="m1" src="##LBL_SITE_URL##templates/css_theme/img/daterange/calendar.gif">
+                <label class="error" generated="true" for="from_to"></label>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">Notes:</td>
+            <td><textarea name="benefit[notes]" class="text" rows="7">{$sm.res.notes}</textarea></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_benefit" value="Save" onclick="save();" class="login_btn">
+            </td>
+        </tr>
+    </table>
+    </form>
+
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#benefit_form");
+$(document).ready(function(){
+	var id="imgid";
+	$('img').daterangepicker({dateFormat: 'dd-mm-yy',datepickerOptions:{changeMonth:true,changeYear:true,yearRange:"-10:+50"},
+		onClose:function(id,rangeA,rangeB){
+			if(rangeA!=undefined && rangeB!=undefined){
+				nrangeBA = rangeB.split("-");
+				nrangeB = nrangeBA[1]+"/"+nrangeBA[0]+"/"+nrangeBA[2];
+				nrangeAA = rangeA.split("-");
+				nrangeA = nrangeAA[1]+"/"+nrangeAA[0]+"/"+nrangeAA[2];
+				if(new Date(nrangeB) >= new Date(nrangeA)){
+					$('#from_to').val(rangeA+" to "+rangeB);
+					$('#from_to').focus();
+				}else{
+					jqueryAlert("<span class='red'>End date should be > start date</span>");
+					return false;
+				}
+			}else{
+				jqueryAlert("No date selected");
+				return false;
+			}
+			
+		}
+
+	}); 
+});
+function save(){
+	var res = benefitForm();
+	var flag='{/literal}{$sm.res.id_emp_benefits}{literal}';
+	if(flag){
+		ch='updateBenefit';
+	}else{
+		ch='insertBenefit';
+	}
+	if(res){
+		cShowActivity('2');
+		var data=$("#benefit_form").serialize();
+		var url="##LBL_SITE_URL##index.php/employee/"+ch+"?"+data;
+		$.post(url,{ce:0},function (res){
+			$("#employee_benefits").html(res);
+			$.fancybox.close();
+			cHideActivity();
+		});
+	}else
+		return false;
+}
+function benefitForm(){		
+	var validator_benefit_form=$("#benefit_form").validate({
+		rules: {
+			"benefit[id_benefits]": {
+				required:true
+			},
+			"from_to": {
+				required:true
+			}
+		},
+		messages: {
+			"benefit[id_benefits]":{
+				required:flexymsg.required
+			},
+			"from_to":{
+				required:flexymsg.required
+			}
+		}
+	});
+	return validator_benefit_form.form();
+}
+</script>
+<style type="text/css">
+#benefit_form .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#benefit_form select {
+	border:1px solid #ccc;
+	width:209px;	
+	padding:4px;
+}
+span.error	{
+	color:#FF0000;
+	font-size:12px;
+}
+</style>
+{/literal}

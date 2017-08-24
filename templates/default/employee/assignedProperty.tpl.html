@@ -1,0 +1,107 @@
+<div class="cont" id="employee_assignedProperty">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+		<div class="message">{include file="employee/message"}</div>
+		<div class="content">
+        	{include file="employee/leftPan"}
+            {include file="employee/rightPan"}
+            <div style="margin-right:10px;">
+            <div class="cont_hdr1 fltlft" style="padding-left:10px;">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" style="width:881px;">Properties list ({$sm.list|@count})
+                <div class="fltrht">{if $smarty.session.id_company}<input type="button" name="addproprty" value="Add" onclick="addProperty();" class="login_btn"/>{/if}</div>	
+                <div class="clear"></div>
+                </div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+            
+<div class="cont_txt" style="margin-left:10px;">
+                        <div class="txtbg_top fltlft"></div>
+                        <div class="txtbg_mdl fltlft">
+            
+            
+                <input type="hidden" name="update_id" value="{$sm.res_personal.id_employee}" id="upd_id">
+                {if $sm.list}<br />
+                <table class="tbl_listing mrgtp0">
+                        <thead>
+                            <tr>
+                                <th><b>Property Name</b></th>
+                                <th><b>Serial No.</b></th>
+                                <th><b>Note</b></th>
+                                {if $smarty.session.id_company}
+                                <th><b>Action</b></th>
+                                {/if}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">
+                            <td>{$x.property_name|capitalize:true|default:"NA"}</td>
+                            <td>{$x.serial_no|default:"NA"}</td>
+                            <td>{$x.notes|wordwrap:40:"<br />"|default:"NA"}</td>
+                            {if $smarty.session.id_company}
+                            <td>
+                                <img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="delete" title="Delete" onclick="return del('{$x.id_cproperty}','');" style="cursor:pointer;">
+                            </td>
+                            {/if}
+                            </tr>
+                            {/section} 
+                        </tbody>
+                     </table>
+                        {else}<br />
+                            <div align="center">This user has no company properties</div>
+                        {/if}
+
+
+                        </div>
+                        <div class="txtbg_btm fltlft"></div>
+                        <div class="clrbth"></div>
+</div>
+
+            </div>
+            <div class="clear"></div>
+        </div>
+	</div>
+    <div class="cont_bg_btm"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{literal}
+<script type="text/javascript">
+function addProperty(){
+	cShowActivity('');
+	var id = $.trim($("#upd_id").val());
+	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"employee",choice:"addProperty",ce:0,id:id},function(res){
+		show_fancybox(res);
+	});
+}
+var id_property;
+function del(id_property,chc){
+	if(chc==''){
+		chc=jqueryConfirm("Do you really want to delete this record?","del",id_property);
+	}
+	if(chc){
+		cShowActivity('1');
+	}else{
+		return false;
+	}
+	var id_employee = $.trim($("#upd_id").val());
+	var url = "##LBL_SITE_URL##index.php/";
+	$.post(url,{page:"employee",choice:"deleteProperty",ce:0,id_employee:id_employee,id_cproperty:id_property},function(res){
+		$("#employee_assignedProperty").html(res);
+		cHideActivity();
+	});
+}
+</script>
+{/literal}

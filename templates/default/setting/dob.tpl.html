@@ -1,0 +1,5 @@
+<h2 align="center">Upcoming BirthDay</h2>
+{section name=cur loop=$sm.res}
+{assign var=x value=$sm.res[cur]}
+<b>{$x.day}</b>&nbsp;{$x.firstname}&nbsp;turns&nbsp;{$x.age}<br/>
+{/section}

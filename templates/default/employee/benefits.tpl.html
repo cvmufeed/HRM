@@ -1,0 +1,115 @@
+<div class="cont" id="employee_benefits">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+		<div class="message">{include file="employee/message"}</div>
+		<div class="content">
+        	{include file="employee/leftPan"}
+            {include file="employee/rightPan"}
+            <div style="margin-right:20px;">
+            <div class="cont_hdr1 fltlft" style="padding-left:10px;">
+                <div class="cont_hdr_lft fltlft"></div>
+                <div class="cont_hdr_mdl1 fltlft" style="width:873px;">Benefits ({$sm.list|@count})
+                <div class="fltrht">{if $smarty.session.id_company}<input type="button" name="agnbenft" value="Assign" onclick="assignBenefit();" class="login_btn" />{/if}</div>	
+                <div class="clear"></div>
+                </div>
+                <div class="cont_hdr_rht fltlft"></div>
+            </div>
+            <div class="clear"></div>
+            
+            
+<div class="cont_txt" style="margin-left:10px;">
+                        <div class="txtbg_top fltlft"></div>
+                        <div class="txtbg_mdl fltlft">
+                <input type="hidden" name="update_id" value="{$sm.res_personal.id_employee}" id="upd_id"><br />
+                     <table class="tbl_listing mrgtp0">
+                        {if $sm.list}
+                        <thead>
+                            <tr>
+                                <th><b>Benefit type</b></th>
+                                <th><b>Eligibility</b></th>
+                                <th><b>Start</b></th>
+                                <th><b>End</b></th>
+                                <th><b>Notes</b></th>
+                                {if $smarty.session.id_company}
+                                <th colspan="2"><b>Action</b></th>
+                                {/if}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                            <tr class="{cycle values="even,odd"}">
+                            <td>{$x.benefit_name}</td>
+                            <td>{if $x.eligibility eq 1}Eligible{else}Not Eligible{/if}</td>
+                            <td>{$x.from_date|date_format:"%d-%m-%Y"}</td>
+                            <td>{$x.to_date|date_format:"%d-%m-%Y"}</td>
+                            <td>{$x.notes|wordwrap:30:"<br />"|default:"NA"}</td>
+                            {if $smarty.session.id_company}
+                            <td>
+                                            <img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="edit" title="Edit" onclick="editBenefit('{$x.id_emp_benefits}');" style="cursor:pointer;">
+                                    </td>
+                            <td>
+                                {if $x.is_set neq 1}
+                                <img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="delete" title="Delete" onclick="return del('{$x.id_emp_benefits}','');" style="cursor:pointer;">
+                                {/if}
+                            </td>
+                            {/if}
+                
+                            </tr>
+                            {/section} 
+                        </tbody>
+                        {else}
+                            <tr><td>No records found.</td></tr>
+                        {/if}
+                     </table>
+                
+                     </div>
+                        <div class="txtbg_btm fltlft"></div>
+                        <div class="clrbth"></div>
+</div>
+                
+                
+            </div>
+            <div class="clear"></div>
+        </div>
+	</div>
+    <div class="cont_bg_btm"></div>
+</div>
+{literal}
+<script type="text/javascript">
+var id_emp_benefits;
+function editBenefit(id_emp_benefits){
+    cShowActivity('');
+    var id = $.trim($("#upd_id").val());
+    var url = "##LBL_SITE_URL##index.php/";
+    $.post(url,{page:"employee",choice:"editBenefit",ce:0,id:id,id_emp_benefits:id_emp_benefits},function(res){
+        show_fancybox(res);
+    });
+}
+function assignBenefit(){
+    cShowActivity('');
+    var id = $.trim($("#upd_id").val());
+    var url = "##LBL_SITE_URL##index.php/";
+    $.post(url,{page:"employee",choice:"assignBenefit",ce:0,id:id},function(res){
+        show_fancybox(res);
+    });
+}
+var id_emp_benefits;
+function del(id_emp_benefits,chc){
+    if(chc==''){
+        chc=jqueryConfirm("Do you really want to delete this record?","del",id_emp_benefits);
+    }
+    if(chc){
+        cShowActivity('1');
+    }else{
+        return false;
+    }
+    var id_employee = $.trim($("#upd_id").val());
+    var url = "##LBL_SITE_URL##index.php/";
+    $.post(url,{page:"employee",choice:"deleteBenefit",ce:0,id_employee:id_employee,id_emp_benefits:id_emp_benefits},function(res){
+        $("#employee_benefits").html(res);
+        cHideActivity();
+    });
+}
+</script>
+{/literal}

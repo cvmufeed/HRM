@@ -1,0 +1,72 @@
+<div class="cont">
+    <div class="cont_bg_top"></div>
+    <div class="cont_bg_mdl">
+        <div class="cont_hdr1 fltlft">
+            <div class="cont_hdr_lft fltlft"></div>
+            <div class="cont_hdr_mdl1 fltlft">
+                <div class="fltlft">
+                	<div class="fltlft bread_crum_class">{$sm.path}</div>
+                </div>
+                <div class="fltrht"><input type="button" onclick="addEdit('add','','{$smarty.request.fid}');" value="Add Folder" /></div>
+                <div class="clear"></div>
+            </div>
+              <input type="hidden" name="start" id="start" value="{$sm.next_prev->start}" />
+              <input type="hidden" name="cnt" id="cnt" value="{$sm.list|@count}" />
+              <input type="hidden" name="idprnt" id="idprnt" value="{$sm.idparent}" />
+            <div class="cont_hdr_rht fltlft"></div>
+        </div>
+        <div class="clrbth"></div>
+        <div class="cont_txt">
+            	<div class="txtbg_top fltlft"></div>
+                <div class="txtbg_mdl fltlft">
+                {if $sm.list}
+                	<table width="97%" cellpadding="0" cellspacing="0" border="0" align="center" class="tbl_listing">
+                    	<tr>
+                        	<th class="user wid86">Name</th>
+                            <th class="email wid203">Type</th>
+                        	<th class="add wid232">Size</th>
+                        	<th class="lnm wid101">Add Date</th>
+                        	<th class="date wid105">Action</th>
+                        </tr>
+                        {section name=cur loop=$sm.list}
+                        {assign var=x value=$sm.list[cur]}
+                    	<tr class="{cycle values="even,odd"}">
+                        	<td class="wid86">
+                                {if $x.typ eq '2'}
+                                <a href="##LBL_SITE_URL##file/list/fid-{$x.id}">{$x.name}</a>
+                                {else}
+                                    <a href="##LBL_SITE_URL##file/downloadFile/id-{$x.id}-file_name-{$x.name}" title="Download this file.">{$x.name}</a>
+                                {/if}
+                            </td>
+                            <td class="wid203">{$x.ftype|default:"NA"}</td>
+                        	<td class="wid232">{$x.fsize}</td>
+                        	<td class="wid101">{$x.adddate|date_format:"%d-%m-%Y"}</td>
+                        	<td class="wid105">
+                                {if $x.typ eq '2'}
+                                    <a href="javascript:void(0);" onclick="addEdit('edit','{$x.id}','{$smarty.request.fid}')"><img src="##LBL_SITE_URL##templates/images/blue/edit_img.png" alt="" title="Edit"/></a>
+                                {/if}
+                                {if $x.iner eq '0'}
+                                    <a href="javascript:void(0);" onclick="deleteFF('{$x.typ}','{$x.id}','{$x.name}','')"><img src="##LBL_SITE_URL##templates/images/blue/delete_img.png" alt="" title="Delete"/></a>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/section}
+                    </table>
+                {else}
+                	<div align="center">No Records Found</div>
+                {/if}
+                </div>
+                <div class="txtbg_btm fltlft"></div>
+                <div class="clrbth"></div>
+            </div>
+    </div>
+    <div class="cont_bg_btm"></div>
+</div>
+{literal}
+<script type="text/javascript">
+	var msg="{/literal}{$smarty.session.msg}{literal}";
+	if(msg!=''){
+		callmsg(msg);
+	}
+</script>
+{/literal}

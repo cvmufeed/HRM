@@ -1,0 +1,66 @@
+<table align="center">
+ <tr>
+  <td>
+    <img src="##LBL_SITE_URL##image/thumb/companylogo/{$company.id_company}_{$company.logo}" alt="Logo">
+  </td>
+  <td>
+    <h2>{$company.company_name}</h2>
+  </td>
+</table>
+{if $res_bday && !$res_contract}
+<h3>Upcoming birthdays</h3>
+<table cellspacing="10" cellpadding="5">
+	<tr>
+		<th>Profile picture</th>
+		<th>Name</th>
+		<th>Date of birth</th>
+		<th>Work e-mail</th>
+		<th>Work phone</th>
+	</tr>
+	{section name=cur loop=$res_bday}
+	{assign var=x value=$res_bday[cur]}
+	<tr>
+		<td>
+    			{if $x.avatar eq ''}
+    				<img src="##LBL_SITE_URL##templates/css_theme/img/avatar/search/hrm_{if $x.gender eq M}male.jpg{else}female.jpg{/if}" alt="Profile Pic">&emsp;
+    				
+    			{else}
+    				<img src="##LBL_SITE_URL##image/thumb4_search/avatar/{$x.id_employee}_{$x.avatar}" title="Profile Pic" style="height:50px;width:50px;">
+    			{/if}
+		</td>
+		<td>{$x.name}</td>
+		<td>{$x.dob}</td>
+		<td>{$x.work_email}</td>
+		<td>{$x.work_phone|default:"NA"}</td>
+	</tr>
+	{/section}
+</table>
+{/if}
+{if $res_contract}
+{assign var=treason value=$util->get_values_from_config('TERMINATE_REASON')}
+<h3>Upcoming contracts ending</h3>
+<table cellspacing="10" cellpadding="5">
+	<tr>
+		<th>Profile picture</th>
+		<th>Employee name</th>
+		<th>Termination date</th>
+		<th>Reason</th>
+	</tr>
+	{section name=cur loop=$res_contract}
+	{assign var=x value=$res_contract[cur]}
+	<tr>
+		<td>
+    			{if $x.avatar eq ''}
+    				<img src="##LBL_SITE_URL##templates/css_theme/img/avatar/search/hrm_{if $x.gender eq M}male.jpg{else}female.jpg{/if}" alt="Profile Pic">&emsp;
+    				
+    			{else}
+    				<img src="##LBL_SITE_URL##image/thumb4_search/avatar/{$x.id_employee}_{$x.avatar}" title="Profile Pic" style="height:50px;width:50px;">
+    			{/if}
+		</td>
+		<td>{$x.name}</td>
+		<td>{$x.terminate_date}</td>
+		<td>{$treason[$x.reason]}</td>
+	</tr>
+	{/section}
+</table>
+{/if}

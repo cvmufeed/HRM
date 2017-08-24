@@ -1,0 +1,64 @@
+<table>
+	<tr>
+    		<td valign="top"><div id="employee_employeeList" class="mrgtp_16">{include file=employee/employeeList}</div></td>
+    	<td>
+        <div class="smlest_box">
+		<div class="top"></div>
+		<div class="mdl">
+    			<div class="cont_hdr1 fltlft">
+                    		<div class="cont_hdr_lft fltlft"></div>
+                    		<div class="cont_hdr_mdl1 fltlft" align="left">Employee menu</div>
+                    		<div class="cont_hdr_rht fltlft"></div>
+                	</div>
+        		<div class="clear"></div>	
+        		<div class="a_cont wid84smlst">
+                		<p><a href="##LBL_SITE_URL##index.php/leave/leaveRequest">Leave requests</a></p>
+                		<p><a href="javascript:void(0);" onclick="searchEmployeeList('t','','','0');" id="a_terminate">Terminated employees</a></p>
+        		</div>
+    		</div>
+		<div class="btm"></div>
+	</div>
+	<div id="latest_viewed">
+		{get_mod mod=employee mgr=employee choice=latestAddModifyViewEmp flag='view'}
+	</div>
+        </td>
+    </tr>
+</table>
+{literal}
+<script type="text/javascript">
+	var f,emp_status='';
+	function searchEmployeeList(f,msg,k,qs){
+		cShowActivity('1');
+		var url="##LBL_SITE_URL##index.php/employee/employeeList";
+		if(qs===''){
+			qs=$("#qstart").val();
+		}
+		// for terminated employee list
+		if(f=='t'){
+			f='';
+			emp_status=3;
+			$("#employee_name").val('');
+			$("#a_terminate").css("font-weight","bold");
+		}
+		// end
+		var employee_name=$("#employee_name").val();
+		$.post(url,{ce:0,chk:1,f:f,keys:k,msg:msg,qs:qs,emp_status:emp_status,employee_name:employee_name},function(res){
+			if(check_JSsession(res,1)) {				
+				$("#employee_employeeList").html(res);
+				if(f == 'for_del'){
+					var url_lat ="##LBL_SITE_URL##index.php/employee/latestAddModifyViewEmp/flag-view";
+					$.post(url_lat,{ce:0},function(res_lat){
+						$("#latest_viewed").html(res_lat);
+					});
+				}					
+				cHideActivity();
+			}
+		});
+	}
+</script>
+<style type="text/css">
+.cont_hdr{
+	margin-top:15px;
+}
+</style>
+{/literal}

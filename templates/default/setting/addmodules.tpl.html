@@ -1,0 +1,117 @@
+<div style="width:405px;">
+    <div class="modal_heading">
+        <div class="lft fltlft"></div>
+        <div class="mdl fltlft" style="width:333px;">
+         {if $sm.module_edit} Edit {else} Add {/if} Modules  </div>
+        <div class="rht fltlft"></div>
+        <div class="clear"></div>
+    </div>
+    <div class="modal_body">
+
+    <span id="modules_msg" class="error"></span><br>
+    <form id="add_modules" name="add_modules" method="post" action="javascript:void(0);">
+        <table class="listing_tbl">
+        {if $sm.module_edit.id_modules}
+		    		<input type="hidden" id="modules[temp_id]" name="modules[temp_id]" value="{$sm.module_edit.id_modules}">
+		    	{/if}
+
+            <td align='right'><b>Module Name: </b></td>
+            <td><input type="text" name="modules[module_name]" value="{$sm.module_edit.module_name}"class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Module Value. : </b></td>
+            <td><input type="text" name="modules[module_value]" value="{$sm.module_edit.module_value}" class="text"></td>
+        </tr>
+        <tr>
+            <td align='right'><b>Isactive : </b></td>
+            {if $sm.module_edit.isactive}
+              <td><input type="checkbox"  name="modules[isactive]" value="1" checked="checked"></td>
+              {else}
+             <td><input type="checkbox"  name="modules[isactive]" {if checked} value="1" {else} value="0" {/if}></td>
+             {/if}
+         </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" name="save_property" value="Save" onclick="save('{$sm.module_edit.id_modules}');" class="login_btn">
+            </td>
+        </tr>
+    </table>
+    </form>
+
+	</div>
+</div>
+{literal}
+<script type="text/javascript">
+forminfo("#add_modules");
+function save(id_modules){
+	$("#modules_msg").html("");
+	var res = addModule();
+ if(res){
+		cShowActivity('2');
+		var data=$("#add_modules").serialize();
+  		if(id_modules!='')
+		{
+		var url="##LBL_SITE_URL##index.php/setting/updatemodules?"+data;
+		}
+		else
+		{
+			var url="##LBL_SITE_URL##index.php/setting/insertmodules?"+data;
+		}
+	//	alert(url);
+  $.post(url,{ce:0},function (res){
+  			$("#setting_modulelist").html(res);
+				$.fancybox.close();
+                cHideActivity();
+		});
+	}else
+		return false;
+}
+function addModule(){
+	var validator_module=$("#add_modules").validate({
+		rules: {
+			"modules[module_name]": {
+				required:true
+			},
+			"modules[module_value]": {
+				required:true
+			}
+		},
+		messages: {
+			"modules[module_name]":{
+				required:flexymsg.required
+			},
+			"modules[module_value]":{
+				required:flexymsg.required
+			}
+		}
+	});
+	return validator_module.form();
+}
+</script>
+<style type="text/css">
+#add_modules .text {
+	width:200px;
+	margin-right:10px;
+	padding:3px;
+	border:1px solid #ccc;
+	letter-spacing:1px;
+}
+#add_modules select {
+	border:1px solid #ccc;
+	width:209px;
+	padding:4px;
+}
+</style>
+{/literal}
+
+
+
+
+
+
+
+
+
+
+
